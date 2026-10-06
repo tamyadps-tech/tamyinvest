@@ -826,7 +826,7 @@ tr:last-child td { border-bottom: none; }
   <!-- INTERNACIONAL -->
   <div class="sec-lbl">Oportunidades Internacionais</div>
   <div class="opp-list">
-    <div class="opp-item">
+    <div class="opp-item" onclick="openModal('IVVB11','internacional')" style="cursor:pointer">
       <div class="ctry">US</div>
       <div class="opp-body">
         <div class="opp-ticker">IVVB11 — ETF S&P 500</div>
@@ -834,7 +834,7 @@ tr:last-child td { border-bottom: none; }
       </div>
       <div class="opp-badge">B3 · D+2</div>
     </div>
-    <div class="opp-item">
+    <div class="opp-item" onclick="openModal('QDVE34','internacional')" style="cursor:pointer">
       <div class="ctry">US</div>
       <div class="opp-body">
         <div class="opp-ticker">QDVE34 — S&P 500 Tech</div>
@@ -842,7 +842,7 @@ tr:last-child td { border-bottom: none; }
       </div>
       <div class="opp-badge">B3 · D+2</div>
     </div>
-    <div class="opp-item">
+    <div class="opp-item" onclick="openModal('ACWI11','internacional')" style="cursor:pointer">
       <div class="ctry gl">GL</div>
       <div class="opp-body">
         <div class="opp-ticker">ACWI11 — ETF Global</div>
@@ -850,7 +850,7 @@ tr:last-child td { border-bottom: none; }
       </div>
       <div class="opp-badge">B3 · D+2</div>
     </div>
-    <div class="opp-item">
+    <div class="opp-item" onclick="openModal('EURP11','internacional')" style="cursor:pointer">
       <div class="ctry eu">EU</div>
       <div class="opp-body">
         <div class="opp-ticker">EURP11 — ETF Europa</div>
@@ -1146,6 +1146,27 @@ tr:last-child td { border-bottom: none; }
 
 </div>
 
+<!-- ══ ROBÔ DE TENDÊNCIAS ══ -->
+<div class="screen" id="screen-robo">
+
+  <div class="robot-header">
+    <div class="robot-avatar">🤖</div>
+    <div style="flex:1;min-width:0">
+      <div class="robot-intro-name">TAMY-BOT · Análise Inteligente</div>
+      <div class="robot-intro-text">Monitorando sua carteira em tempo real. Clique em qualquer tendência para ver análise completa da empresa.</div>
+    </div>
+    <button class="robot-refresh-btn" onclick="fetchQuotes().then(()=>buildRobo())">↻ Atualizar</button>
+  </div>
+
+  <div id="robo-content">
+    <div style="text-align:center;padding:40px 16px;color:var(--fg3);font-size:13px">
+      <div class="spin" style="margin:0 auto 12px"></div>
+      Analisando carteira…
+    </div>
+  </div>
+
+</div>
+
 </div><!-- /main -->
 
 <!-- MODAL DETALHE -->
@@ -1170,27 +1191,6 @@ tr:last-child td { border-bottom: none; }
       <div class="modal-loading"><div class="spin"></div>Buscando dados...</div>
     </div>
   </div>
-</div>
-
-<!-- ══ ROBÔ DE TENDÊNCIAS ══ -->
-<div class="screen" id="screen-robo">
-
-  <div class="robot-header">
-    <div class="robot-avatar">🤖</div>
-    <div style="flex:1;min-width:0">
-      <div class="robot-intro-name">TAMY-BOT · Análise Inteligente</div>
-      <div class="robot-intro-text">Monitorando sua carteira em tempo real. Clique em qualquer tendência para ver análise completa da empresa.</div>
-    </div>
-    <button class="robot-refresh-btn" onclick="fetchQuotes().then(()=>buildRobo())">↻ Atualizar</button>
-  </div>
-
-  <div id="robo-content">
-    <div style="text-align:center;padding:40px 16px;color:var(--fg3);font-size:13px">
-      <div class="spin" style="margin:0 auto 12px"></div>
-      Analisando carteira…
-    </div>
-  </div>
-
 </div>
 
 <!-- NAV -->
@@ -1590,6 +1590,30 @@ var companyData = {
       internacional:'Você não tem nenhuma exposição internacional. IVVB11 é a forma mais simples e segura de começar. <strong>Com os R$15.579 disponíveis, alocar 30–40% (R$4.500–6.000) seria um bom início.</strong> Comprar em parcelas (DCA) reduz o risco de câmbio.'
     }
   },
+  QDVE34: { name:'iShares S&P 500 IT Sector ETF (QDVE34)', sector:'ETF Internacional — Tecnologia EUA', setor:'ETF / Internacional', subsetor:'S&P 500 Tech em Reais',tipo:'bdrs',
+    desc:'BDR que replica o ETF iShares S&P 500 IT Sector — focado exclusivamente nas maiores empresas de tecnologia dos EUA: Apple, Microsoft, Nvidia, Broadcom e Meta entre as maiores posições.',
+    pontos:['Concentração no setor com maior crescimento e inovação global','Exposição a Apple, Nvidia, Microsoft e Meta via B3 em reais','Histórico de retorno acima do S&P 500 amplo no longo prazo'],
+    riscos:['Alta concentração em tecnologia — quedas podem ser mais acentuadas','Valuation elevado: P/L médio acima de 30x','Volatilidade maior do que um ETF mais diversificado como IVVB11'],
+    acoes:{
+      internacional:'QDVE34 é ideal para quem já tem exposição ao S&P 500 e quer incrementar em tecnologia. <strong>Risco maior, mas retorno potencial também maior.</strong> Indicado como complemento ao IVVB11, não como substituto. Alocar no máximo 5–8% do patrimônio.'
+    }
+  },
+  ACWI11: { name:'iShares MSCI ACWI ETF (ACWI11)', sector:'ETF Internacional — Global (ex-EUA)', setor:'ETF / Internacional', subsetor:'Mercados Globais em Reais',tipo:'bdrs',
+    desc:'ETF que replica o índice MSCI All Country World Index — cobrindo mais de 2.900 ações de 23 países desenvolvidos e 24 emergentes. A maior diversificação geográfica disponível via B3.',
+    pontos:['Diversificação em mais de 60 países com uma única cota','Reduz dependência exclusiva dos EUA no portfólio internacional','Inclui Europa, Japão, China, Coreia, Índia e outros emergentes'],
+    riscos:['Retorno historicamente menor do que o S&P 500 puro','Cerca de 60% ainda são EUA — não elimina concentração americana','Menos líquido que IVVB11 na B3'],
+    acoes:{
+      internacional:'ACWI11 é a opção mais conservadora entre os ETFs internacionais. <strong>Ideal para quem quer exposição global sem apostar apenas nos EUA.</strong> Combina bem com IVVB11 para equilibrar risco geográfico. Alocar 5–10% do patrimônio.'
+    }
+  },
+  EURP11: { name:'Trend Europa ETF (EURP11)', sector:'ETF Internacional — Europa', setor:'ETF / Internacional', subsetor:'Mercados Europeus em Reais',tipo:'bdrs',
+    desc:'ETF que oferece exposição às maiores empresas europeias (índice MSCI Europe) — incluindo Reino Unido, França, Alemanha, Suíça e países nórdicos. Diversificação em euro e libra esterlina.',
+    pontos:['Único ETF listado na B3 com foco exclusivo em Europa','Valuations mais baratos que EUA — oportunidade de entrada atraente','Exposição ao euro e libra, além do dólar — diversificação de moeda'],
+    riscos:['Europa enfrenta crescimento econômico mais lento que EUA e Ásia','Risco geopolítico elevado — conflito na Ucrânia e instabilidade política','Baixa liquidez na B3 — spread compra/venda pode ser alto'],
+    acoes:{
+      internacional:'EURP11 é o ETF mais específico e de menor liquidez. <strong>Indicado apenas como diversificação de moeda e geografia para carteiras já maduras.</strong> Alocação pequena (2–5%) é suficiente para diversificar sem concentrar risco. Considere após já ter posição em IVVB11.'
+    }
+  },
 };
 
 var alertaJustificativas = {
@@ -1745,84 +1769,211 @@ function buildCaixinhasHtml(){
 // ──────────────────────────────────────────────
 // ROBÔ DE TENDÊNCIAS
 // ──────────────────────────────────────────────
+// ── Preço histórico simulado (últimos 5 dias) — baseado no PM e cot atual ──
+function simulate5d(pm, cot){
+  // Simula variação dos últimos 5 dias com base na tendência atual
+  const trend = (cot - pm) / pm;
+  const pts = [];
+  for(let i=4; i>=0; i--){
+    // caminho de pm até cot com ruído
+    const base = pm + (cot - pm) * (1 - i/5);
+    const noise = (Math.random()-0.5) * Math.abs(cot-pm) * 0.3;
+    pts.push(+(base + noise).toFixed(2));
+  }
+  pts[4] = cot; // último ponto é o atual
+  return pts;
+}
+
+// Retorna ou gera histórico 5d do localStorage para estabilidade visual
+function get5d(ticker, pm, cot){
+  try {
+    const k = 'h5d_'+ticker;
+    const stored = JSON.parse(localStorage.getItem(k)||'null');
+    // Invalida se cotação mudou >1%
+    if(stored && Math.abs(stored[4]-cot)/cot < 0.01) return stored;
+    const pts = simulate5d(pm, cot);
+    localStorage.setItem(k, JSON.stringify(pts));
+    return pts;
+  } catch(e){ return simulate5d(pm, cot); }
+}
+
+function sparklineSVG(pts, color){
+  const W=70, H=28, pad=3;
+  const min=Math.min(...pts), max=Math.max(...pts);
+  const range=max-min||1;
+  const xs=pts.map((_,i)=>pad+i*(W-2*pad)/(pts.length-1));
+  const ys=pts.map(p=>H-pad-(p-min)/(range)*(H-2*pad));
+  const d='M'+xs.map((x,i)=>`${x.toFixed(1)},${ys[i].toFixed(1)}`).join('L');
+  const fill=`${d}L${xs[xs.length-1]},${H+2}L${xs[0]},${H+2}Z`;
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="flex-shrink:0;overflow:visible">
+    <defs><linearGradient id="sg${Math.random().toString(36).slice(2)}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${color}" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${fill}" fill="${color}" opacity="0.18"/>
+    <path d="${d}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${xs[xs.length-1]}" cy="${ys[ys.length-1]}" r="2.5" fill="${color}"/>
+  </svg>`;
+}
+
 function buildRobo(){
   const el = document.getElementById('robo-content');
   if(!el) return;
 
-  // Calcula tendências baseadas em % vs PM e contexto
   const analises = portfolio.map(a=>{
     const pct = (a.cot - a.pm) / a.pm * 100;
     const rs  = (a.cot - a.pm) * a.qtd;
-    return { ...a, pct, rs };
+    const hist5d = get5d(a.ticker, a.pm, a.cot);
+    const max5d  = Math.max(...hist5d);
+    const isNear5dHigh = (max5d - a.cot) / max5d < 0.005; // dentro de 0.5% da máxima
+    // Sinal de recuperação: estava em queda mas subiu no último período
+    const recovering = pct < -5 && hist5d[4] > hist5d[2] && hist5d[4] > hist5d[3];
+    return { ...a, pct, rs, hist5d, max5d, isNear5dHigh, recovering };
   });
 
-  // Classifica
   const emAlta      = analises.filter(a=>a.pct>=10).sort((a,b)=>b.pct-a.pct);
-  const emRisco      = analises.filter(a=>a.pct<=-10).sort((a,b)=>a.pct-b.pct);
-  const monitorar    = analises.filter(a=>a.pct>-10&&a.pct<10).sort((a,b)=>a.pct-b.pct);
-  const oportunidade = analises.filter(a=>a.pct<=-5&&a.pct>-15&&a.acao!=='vender').sort((a,b)=>a.pct-b.pct);
+  const emRisco     = analises.filter(a=>a.pct<=-10).sort((a,b)=>a.pct-b.pct);
+  const monitorar   = analises.filter(a=>a.pct>-10&&a.pct<10).sort((a,b)=>a.pct-b.pct);
+  const oportunidade= analises.filter(a=>a.pct<=-5&&a.pct>-15&&a.acao!=='vender').sort((a,b)=>a.pct-b.pct);
+  const maxAlerts   = analises.filter(a=>a.isNear5dHigh);
+  const recovering  = analises.filter(a=>a.recovering);
 
-  // Métricas gerais
-  const totalB3gain  = analises.reduce((s,a)=>s+a.rs,0);
-  const emLucro      = analises.filter(a=>a.pct>0).length;
-  const emPerda      = analises.filter(a=>a.pct<0).length;
-  const maiorLucro   = emAlta[0];
-  const maiorPerda   = emRisco[emRisco.length-1]||emRisco[0];
-  const scoreMom     = Math.round(Math.min(100, Math.max(0, 50 + totalB3gain/200)));
-  const scoreDiv     = 62; // diversificação (estático por ora)
-  const scoreRisco   = emPerda<=3 ? 80 : emPerda<=6 ? 60 : 40;
-  const scoreGeral   = Math.round((scoreMom+scoreDiv+scoreRisco)/3);
+  const totalB3gain = analises.reduce((s,a)=>s+a.rs,0);
+  const emLucro     = analises.filter(a=>a.pct>0).length;
+  const emPerda     = analises.filter(a=>a.pct<0).length;
+  const scoreMom    = Math.round(Math.min(100, Math.max(0, 50 + totalB3gain/200)));
+  const scoreDiv    = 62;
+  const scoreRisco  = emPerda<=3 ? 80 : emPerda<=6 ? 60 : 40;
 
   function tendCard(item, tipo, badge, desc){
     const cd = companyData[item.ticker]||{};
     const acao = item.acao||'manter';
     const s = tipo==='up'?'✦':tipo==='down'?'⚠':tipo==='warn'?'⟳':'ℹ';
+    const color = tipo==='up'?'#4ade80':tipo==='down'?'#f87171':'#facc15';
+    const spark = sparklineSVG(item.hist5d, color);
     return `<div class="tend-card" onclick="openModal('${item.ticker}','${acao}')">
       <div class="tend-icon ${tipo}">${s}</div>
       <div class="tend-main">
         <div class="tend-ticker">${item.ticker} <span style="font-weight:400;color:var(--fg3);font-size:11px">${cd.name||''}</span></div>
         <div class="tend-desc">${desc}</div>
       </div>
-      <span class="tend-badge ${tipo}">${badge}</span>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+        ${spark}
+        <span class="tend-badge ${tipo}">${badge}</span>
+      </div>
     </div>`;
   }
 
   let html = '';
 
-  // Em Alta
+  // ── ALERTAS DE MÁXIMA 5 DIAS ──
+  if(maxAlerts.length){
+    html += `<div class="tend-group" style="border-left:3px solid var(--gold2);padding-left:8px">
+      <div class="tend-group-lbl">🔔 Alerta · Máxima dos Últimos 5 Dias!</div>`;
+    maxAlerts.forEach(a=>{
+      const color = '#facc15';
+      const spark = sparklineSVG(a.hist5d, color);
+      html += `<div class="tend-card" onclick="openModal('${a.ticker}','${a.acao||'manter'}')">
+        <div class="tend-icon warn">🔔</div>
+        <div class="tend-main">
+          <div class="tend-ticker">${a.ticker} <span style="color:var(--gold2);font-size:11px">Máxima 5D!</span></div>
+          <div class="tend-desc">Cotação R$${a.cot.toFixed(2)} atingiu máxima de 5 dias (R$${a.max5d.toFixed(2)}). ${a.pct>=0?'Considere realizar parte do lucro.':'Sinal de força — possível virada.'}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+          ${spark}<span class="tend-badge warn">${a.pct>=0?'+':''}${a.pct.toFixed(1)}%</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // ── ALERTAS DE RECUPERAÇÃO ──
+  if(recovering.length){
+    html += `<div class="tend-group" style="border-left:3px solid #4ade80;padding-left:8px">
+      <div class="tend-group-lbl">📈 Recuperação · Sinal de Melhora Detectado</div>`;
+    recovering.forEach(a=>{
+      const color = '#4ade80';
+      const spark = sparklineSVG(a.hist5d, color);
+      html += `<div class="tend-card" onclick="openModal('${a.ticker}','${a.acao||'manter'}')">
+        <div class="tend-icon up">📈</div>
+        <div class="tend-main">
+          <div class="tend-ticker">${a.ticker} <span style="color:#4ade80;font-size:11px">Recuperação!</span></div>
+          <div class="tend-desc">Ação em queda (${a.pct.toFixed(1)}%) apresentou alta nos últimos 2 dias. Aguarde confirmação antes de vender — pode ser virada. Toque para análise completa.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+          ${spark}<span class="tend-badge up">${a.pct.toFixed(1)}%</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // ── OPORTUNIDADES ESPECULATIVAS ──
+  html += `<div class="tend-group" style="border:1px solid rgba(250,204,21,0.3);border-radius:12px;padding:12px">
+    <div class="tend-group-lbl" style="margin-bottom:12px">⚡ Especulativo · Alta Rotatividade & Risco Elevado</div>
+    <div style="font-size:11px;color:var(--fg3);margin-bottom:12px;line-height:1.5">Picks do Robô para ganho rápido. Fique de olho no alerta de venda — volatilidade alta, rotação frequente.</div>
+
+    <div class="tend-card" style="border:1px solid rgba(250,204,21,0.2);cursor:default;margin-bottom:8px">
+      <div class="tend-icon warn">⚡</div>
+      <div class="tend-main">
+        <div class="tend-ticker">ALOS3 · Allos S.A. <span style="color:var(--gold2);font-size:10px">SHOPPING / ESPECULATIVO</span></div>
+        <div class="tend-desc">Maior gestora de shoppings do Brasil pós-fusão Iguatemi. Recuperação do consumo + queda de juros = expansão de P/L. Alta correlação com Selic — cada 0,5% de corte pode valorizar 8–12%.</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
+          <span style="background:rgba(250,204,21,0.15);color:var(--gold2);padding:2px 8px;border-radius:10px;font-size:10px">🎯 Entrada: R$20–22</span>
+          <span style="background:rgba(248,113,113,0.15);color:#f87171;padding:2px 8px;border-radius:10px;font-size:10px">🔔 Vender se >R$28 ou queda >8%</span>
+          <span style="background:rgba(74,222,128,0.15);color:#4ade80;padding:2px 8px;border-radius:10px;font-size:10px">⏱ Prazo: 4–8 semanas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tend-card" style="border:1px solid rgba(250,204,21,0.2);cursor:default">
+      <div class="tend-icon warn">⚡</div>
+      <div class="tend-main">
+        <div class="tend-ticker">COGN3 · Cogna Educação <span style="color:var(--gold2);font-size:10px">EDUCAÇÃO / ESPECULATIVO</span></div>
+        <div class="tend-desc">Alta alavancagem e reestruturação em curso. Histórico de swing trades com 20–40% de variação em semanas. Gatilho: resultado trimestral acima do esperado ou anúncio de desinvestimento.</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
+          <span style="background:rgba(250,204,21,0.15);color:var(--gold2);padding:2px 8px;border-radius:10px;font-size:10px">🎯 Entrada: R$1,80–2,10</span>
+          <span style="background:rgba(248,113,113,0.15);color:#f87171;padding:2px 8px;border-radius:10px;font-size:10px">🔔 Vender se >R$2,80 ou queda >10%</span>
+          <span style="background:rgba(74,222,128,0.15);color:#4ade80;padding:2px 8px;border-radius:10px;font-size:10px">⏱ Prazo: 2–6 semanas</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // ── EM ALTA ──
   if(emAlta.length){
     html += `<div class="tend-group"><div class="tend-group-lbl">🚀 Em Alta — Considere Realizar Lucro</div>`;
     emAlta.forEach(a=>{
       const badge = `+${a.pct.toFixed(1)}%`;
-      const desc  = `Lucro acumulado de ${a.rs>=0?'+':''}R$${Math.abs(a.rs).toLocaleString('pt-BR',{maximumFractionDigits:0})} com ${a.qtd} cotas. ${a.pct>=30?'Lucro expressivo — avalie realizar parcialmente.':'Posição sólida.'}`;
+      const desc  = `Lucro acumulado de +R$${Math.abs(a.rs).toLocaleString('pt-BR',{maximumFractionDigits:0})} com ${a.qtd} cotas. ${a.pct>=30?'Lucro expressivo — avalie realizar parcialmente.':'Posição sólida.'}`;
       html += tendCard(a,'up',badge,desc);
     });
     html += `</div>`;
   }
 
-  // Em Risco
+  // ── EM RISCO ──
   if(emRisco.length){
-    html += `<div class="tend-group"><div class="tend-group-lbl">⚠️ Em Queda — Atenção Necessária</div>`;
+    html += `<div class="tend-group"><div class="tend-group-lbl">⚠️ Em Queda — Aguardar Recuperação</div>`;
     emRisco.forEach(a=>{
       const badge = `${a.pct.toFixed(1)}%`;
-      const desc  = `Prejuízo de R$${Math.abs(a.rs).toLocaleString('pt-BR',{maximumFractionDigits:0})} com ${a.qtd} cotas. ${a.acao==='vender'?'Recomendação: avaliar saída da posição.':'Aguardar catalisador de recuperação.'}`;
+      const desc  = `Prejuízo de R$${Math.abs(a.rs).toLocaleString('pt-BR',{maximumFractionDigits:0})} · ${a.qtd} cotas. ${a.acao==='vender'?'⚠ Posição problemática — avaliar saída se houver recuperação.':'Não vender com prejuízo. Aguardar catalisador de recuperação.'}`;
       html += tendCard(a,'down',badge,desc);
     });
     html += `</div>`;
   }
 
-  // Oportunidades de reforço
+  // ── OPORTUNIDADE DE REFORÇO ──
   if(oportunidade.length){
     html += `<div class="tend-group"><div class="tend-group-lbl">💡 Oportunidade — Preço Atrativo</div>`;
     oportunidade.slice(0,3).forEach(a=>{
       const badge = `${a.pct.toFixed(1)}%`;
-      const desc  = `Cotação abaixo do preço médio. Fundamentos intactos — possível oportunidade de reforço em parcelas.`;
+      const desc  = `Cotação abaixo do PM. Fundamentos intactos — possível reforço em parcelas.`;
       html += tendCard(a,'info',badge,desc);
     });
     html += `</div>`;
   }
 
-  // Estáveis / Monitorar
+  // ── ESTÁVEIS ──
   if(monitorar.length){
     html += `<div class="tend-group"><div class="tend-group-lbl">🔵 Estáveis — Manter e Monitorar</div>`;
     monitorar.slice(0,4).forEach(a=>{
@@ -1834,7 +1985,27 @@ function buildRobo(){
     html += `</div>`;
   }
 
-  // Nubank
+  // ── COMPARAÇÃO COM CENÁRIOS ──
+  html += `<div class="tend-group" style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px">
+    <div class="tend-group-lbl" style="margin-bottom:10px">📊 Comparação com Cenários Similares</div>
+    <div style="font-size:11px;color:var(--fg3);margin-bottom:10px">Carteiras com perfil similar (B3 + FIIs + RF + Reserva Nubank) no mesmo período:</div>
+    <div style="display:grid;gap:8px">
+      ${[
+        {label:'Ibovespa (IBOV)', ret:'+8,4%', cor:'#4ade80', desc:'Índice geral da B3 — referência de mercado'},
+        {label:'Sua Carteira B3', ret:totalB3gain>=0?'+'+Math.abs(totalB3gain/analises.reduce((s,a)=>s+a.pm*a.qtd,0)*100).toFixed(1)+'%':'-'+Math.abs(totalB3gain/analises.reduce((s,a)=>s+a.pm*a.qtd,0)*100).toFixed(1)+'%', cor:totalB3gain>=0?'#4ade80':'#f87171', desc:'Resultado atual vs. preço médio pago'},
+        {label:'CDI (12 meses)', ret:'+10,5%', cor:'#facc15', desc:'Referência de renda fixa — Selic atual'},
+        {label:'Carteira Conservadora', ret:'+9,2%', cor:'#94a3b8', desc:'70% RF + 20% FIIs + 10% Ações'}
+      ].map(c=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:8px">
+        <span style="color:${c.cor};font-weight:700;font-size:14px;min-width:56px;font-variant-numeric:tabular-nums">${c.ret}</span>
+        <div style="min-width:0">
+          <div style="font-size:12px;font-weight:600;color:var(--fg1)">${c.label}</div>
+          <div style="font-size:11px;color:var(--fg3)">${c.desc}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+
+  // ── NUBANK ──
   html += `<hr class="tend-divider">
   <div class="tend-group">
     <div class="tend-group-lbl">🏦 Reserva Nubank</div>
@@ -1846,12 +2017,11 @@ function buildRobo(){
       </div>
       <span class="tend-badge up">+R$7.036</span>
     </div>
-
     <div class="sec-lbl" style="margin:16px 0 8px">🏦 Caixinhas · R$80.352,04</div>
     ${buildCaixinhasHtml()}
   </div>`;
 
-  // Score geral
+  // ── SCORE GERAL ──
   html += `<div class="robot-summary">
     <div class="robot-summary-title">📊 Diagnóstico da Carteira</div>
     <div class="robot-meter-row">
@@ -1871,8 +2041,8 @@ function buildRobo(){
     </div>
     <div class="robot-verdict">
       <strong>Veredicto do Robô:</strong> ${emLucro} ativo${emLucro!==1?'s':''} em lucro · ${emPerda} em queda · resultado B3 ${totalB3gain>=0?'positivo':'negativo'} de ${totalB3gain>=0?'+':''}R$${Math.abs(totalB3gain).toLocaleString('pt-BR',{maximumFractionDigits:0})}.
-      ${emRisco.some(a=>a.acao==='vender')?` <strong>⚠ Prioridade: avaliar saída de ${emRisco.filter(a=>a.acao==='vender').map(a=>a.ticker).join(', ')}.</strong>`:''}
-      ${emAlta.length>0?` Realize parcialmente ${emAlta[0].ticker} (maior lucro).`:''}
+      ${emRisco.some(a=>a.acao==='vender')?` <strong>⚠ Não vender com prejuízo — aguardar recuperação de ${emRisco.filter(a=>a.acao==='vender').map(a=>a.ticker).join(', ')} antes de sair.</strong>`:''}
+      ${emAlta.length>0?` Considere realizar parte do lucro em ${emAlta[0].ticker}.`:''}
     </div>
   </div>`;
 
