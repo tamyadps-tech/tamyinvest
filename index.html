@@ -50,8 +50,12 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; background: var(--bg); color: var(--fg); }
+html { height: 100%; height: -webkit-fill-available; background: var(--bg); }
 body {
+  height: 100%;
+  height: -webkit-fill-available;
+  background: var(--bg);
+  color: var(--fg);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   font-size: 14px;
   line-height: 1.5;
@@ -62,7 +66,7 @@ body {
 .mono { font-family: 'JetBrains Mono', 'Fira Mono', monospace; }
 
 /* LAYOUT */
-.shell  { display: flex; flex-direction: column; height: 100%; }
+.shell  { display: flex; flex-direction: column; height: 100%; height: -webkit-fill-available; }
 .main   { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding: 0 0 8px; }
 .screen { display: none; }
 .screen.active { display: block; }
@@ -74,6 +78,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px 14px;
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
   background: var(--bg);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
@@ -115,7 +120,6 @@ body {
 
 /* NAV BAR — estilo Tamyrica */
 nav {
-  height: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
   display: flex;
   align-items: flex-start;
   background: var(--layer1);
