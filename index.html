@@ -1,4 +1,8 @@
 <title>Tamy Invest</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0d0f14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
@@ -1775,6 +1779,24 @@ function toggleTheme(){
   updatePatrimonio();
   solicitarNotificacao(); // pede permissão de push ao abrir
   fetchQuotes();
+  // Registra Service Worker para notificações em background
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      // Agenda verificação periódica via Periodic Background Sync (Chrome Android)
+      if(reg.periodicSync){
+        reg.periodicSync.register('verificar-b3sa3', { minInterval: 5 * 60 * 1000 })
+          .catch(()=>{});
+      }
+      // Fallback: avisa o SW para rodar o timer interno
+      if(reg.active){
+        reg.active.postMessage({type:'AGENDAR_VERIFICACAO'});
+      } else {
+        navigator.serviceWorker.ready.then(r => {
+          r.active.postMessage({type:'AGENDAR_VERIFICACAO'});
+        });
+      }
+    }).catch(()=>{});
+  }
 
   setInterval(()=>{
     const now=new Date(), m=now.getHours()*60+now.getMinutes();
