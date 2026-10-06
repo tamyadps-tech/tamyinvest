@@ -717,6 +717,88 @@ tr:last-child td { border-bottom: none; }
   color: var(--fg2);
   line-height: 1.5;
 }
+
+/* ─── MOBILE RESPONSIVO ─── */
+@media (max-width: 600px) {
+  /* Base: aumenta fonte geral */
+  body { font-size: 15px; }
+
+  /* Hero: valor principal menor para caber */
+  .hero-value { font-size: 28px; letter-spacing: -1px; }
+  .hero { padding: 20px 16px 18px; }
+  .pill { min-width: 70px; padding: 9px 10px; }
+  .pill-lbl { font-size: 10px; }
+  .pill-val  { font-size: 13px; }
+
+  /* Stat cards: textos maiores */
+  .stat-lbl { font-size: 11px; }
+  .stat-val  { font-size: 19px; }
+  .stat-sub  { font-size: 12px; }
+
+  /* Section label */
+  .sec-lbl { font-size: 11px; }
+
+  /* Alert items: mais respiração */
+  .alert-tag   { font-size: 10px; padding: 3px 8px; }
+  .alert-title { font-size: 14px; }
+  .alert-sub   { font-size: 12px; }
+
+  /* Nav bar: ícones e labels maiores */
+  .nb { font-size: 11px; gap: 4px; }
+  .nb svg { width: 26px; height: 26px; }
+  --nav-h: 72px;
+
+  /* Tabela: scroll horizontal já existe, só aumentar fonte */
+  table { font-size: 13px; }
+  th    { font-size: 10px; padding: 10px 12px; }
+  td    { padding: 13px 12px; font-size: 13px; }
+  .tk   { font-size: 13px; }
+  .badge { font-size: 10px; padding: 4px 9px; }
+
+  /* Score/Meta */
+  .score-num    { font-size: 60px; }
+  .score-meta-top { font-size: 14px; }
+  .score-meta-bot { font-size: 12px; }
+  .srow-name    { font-size: 13px; }
+  .srow-score   { font-size: 12px; }
+  .goal-pct     { font-size: 48px; }
+  .goal-desc    { font-size: 13px; }
+  .prog-lbls    { font-size: 12px; }
+
+  /* Cenário */
+  .cen-title { font-size: 15px; }
+  .cen-prob  { font-size: 12px; }
+  .cen-delta { font-size: 22px; }
+  .cen-row-lbl, .cen-row-val { font-size: 13px; }
+
+  /* Análise / donut */
+  .legend-lbl, .legend-pct { font-size: 13px; }
+  .donut-wrap { gap: 14px; }
+
+  /* Liquidez */
+  .liq-name  { font-size: 13px; }
+  .liq-prazo { font-size: 12px; }
+  .liq-pct   { font-size: 13px; }
+
+  /* Oportunidades */
+  .opp-ticker { font-size: 14px; }
+  .opp-desc   { font-size: 12px; }
+
+  /* Insight box */
+  .insight { font-size: 13px; }
+
+  /* Modal */
+  .modal-sheet { max-height: 90vh; }
+  .mod-ticker  { font-size: 20px; }
+
+  /* Tbl footer */
+  .tbl-footer-lbl { font-size: 11px; }
+  .tbl-footer-val { font-size: 17px; }
+
+  /* Header */
+  .hdr-name { font-size: 16px; }
+  .hdr-date { font-size: 12px; }
+}
 </style>
 
 <div class="shell">
