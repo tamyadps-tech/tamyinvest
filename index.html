@@ -1116,6 +1116,15 @@ tr:last-child td { border-bottom: none; }
 
   <div class="sec-lbl">Urgente</div>
   <div class="alert-list">
+    <!-- ALERTA DINÂMICO B3SA3 MÁXIMA 5D — ABA ALERTAS -->
+    <div id="b3sa3-alert-card-alertas" class="alert-item a-blue" onclick="openModal('B3SA3','lucro')" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">B3SA3 · carregando...</div>
+        <div class="alert-title">Aguardando cotação e máxima 5D</div>
+        <div class="alert-sub">Buscando dados em tempo real...</div>
+      </div>
+    </div>
     <div class="alert-item a-gold" onclick="openModal('BBAS3','monitorar')">
       <div class="alert-bar"></div>
       <div class="alert-body">
@@ -1615,9 +1624,46 @@ async function fetchB3SA3History(){
   }
 }
 
-function updateB3SA3AlertCard(cot, max5d){
-  const card = document.getElementById('b3sa3-alert-card');
+// ── Push Notification ──────────────────────────────────────────────
+async function solicitarNotificacao(){
+  if(!('Notification' in window)) return;
+  if(Notification.permission === 'default'){
+    await Notification.requestPermission();
+  }
+}
+
+function dispararNotificacaoPush(titulo, corpo){
+  if(!('Notification' in window)) return;
+  if(Notification.permission !== 'granted') return;
+  // Evita spam: guarda timestamp do último disparo
+  const KEY = 'b3sa3_notif_last';
+  const ultimo = parseInt(localStorage.getItem(KEY)||'0');
+  const agora = Date.now();
+  if(agora - ultimo < 30 * 60 * 1000) return; // máx 1 notif a cada 30 min
+  localStorage.setItem(KEY, agora);
+  try {
+    new Notification(titulo, {
+      body: corpo,
+      icon: 'https://cdn-icons-png.flaticon.com/512/4256/4256900.png',
+      badge: 'https://cdn-icons-png.flaticon.com/512/4256/4256900.png',
+      tag: 'b3sa3-maxima',
+      requireInteraction: true,
+      vibrate: [200, 100, 200]
+    });
+  } catch(e){}
+}
+
+function _setCardData(card, classe, tagTxt, titulo, sub){
   if(!card) return;
+  card.className = `alert-item ${classe}`;
+  card.querySelector('.alert-tag').textContent = tagTxt;
+  card.querySelector('.alert-title').textContent = titulo;
+  card.querySelector('.alert-sub').textContent = sub;
+}
+
+function updateB3SA3AlertCard(cot, max5d){
+  const cardHome    = document.getElementById('b3sa3-alert-card');
+  const cardAlertas = document.getElementById('b3sa3-alert-card-alertas');
   const PM = 16.89;
   const qtd = 50;
   const lucroTotal = cot ? ((cot - PM) * qtd) : null;
@@ -1632,11 +1678,15 @@ function updateB3SA3AlertCard(cot, max5d){
   let classe, tagTxt, titulo, sub;
 
   if(naMaxima){
-    // 🔔 ALERTA VENDA — cotação batendo máxima 5 dias
     classe = 'a-green';
     tagTxt = '🔔 MÁXIMA 5 DIAS — AVALIAR VENDA';
     titulo = `B3SA3 · R$${cot?.toFixed(2)} — pico dos últimos 5 dias!`;
     sub = `Máxima 5D: R$${max5d?.toFixed(2)} · Você está ${pctStr} vs PM · Lucro nas 50 cotas: ${lucroStr}. Momento de avaliar nova realização!`;
+    // 🔔 Dispara notificação real no celular
+    dispararNotificacaoPush(
+      '🔔 B3SA3 bateu a máxima 5 dias!',
+      `Cotação R$${cot?.toFixed(2)} · Lucro: ${lucroStr} · Avalie vender agora!`
+    );
   } else if(cot && max5d){
     const faltaPct = distMaxima?.toFixed(1);
     classe = 'a-blue';
@@ -1650,11 +1700,9 @@ function updateB3SA3AlertCard(cot, max5d){
     sub = `Lucro atual: ${lucroStr} · aguardando histórico 5 dias`;
   }
 
-  // Atualiza classe do card
-  card.className = `alert-item ${classe}`;
-  card.querySelector('.alert-tag').textContent = tagTxt;
-  card.querySelector('.alert-title').textContent = titulo;
-  card.querySelector('.alert-sub').textContent = sub;
+  // Atualiza os dois cards (Home + aba Alertas)
+  _setCardData(cardHome,    classe, tagTxt, titulo, sub);
+  _setCardData(cardAlertas, classe, tagTxt, titulo, sub);
 }
 
 var liquidez=[
@@ -1725,6 +1773,7 @@ function toggleTheme(){
   buildTable();
   buildLiquidez();
   updatePatrimonio();
+  solicitarNotificacao(); // pede permissão de push ao abrir
   fetchQuotes();
 
   setInterval(()=>{
