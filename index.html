@@ -4,7 +4,7 @@
 <meta name="theme-color" content="#06080f" media="(prefers-color-scheme: dark)">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
@@ -50,10 +50,9 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { height: 100%; height: -webkit-fill-available; background: var(--bg); }
+html { height: 100%; background: var(--bg); }
 body {
   height: 100%;
-  height: -webkit-fill-available;
   background: var(--bg);
   color: var(--fg);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -66,7 +65,7 @@ body {
 .mono { font-family: 'JetBrains Mono', 'Fira Mono', monospace; }
 
 /* LAYOUT */
-.shell  { display: flex; flex-direction: column; height: 100%; height: -webkit-fill-available; }
+.shell  { display: flex; flex-direction: column; height: 100%; }
 .main   { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding: 0 0 8px; }
 .screen { display: none; }
 .screen.active { display: block; }
@@ -78,6 +77,9 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px 14px;
+  /* safe-area-inset-top cobre a status bar do iPhone no modo PWA (black-translucent).
+     env() retorna 0 no navegador comum, então não quebra em outros dispositivos. */
+  padding-top: max(16px, env(safe-area-inset-top));
   background: var(--bg);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
