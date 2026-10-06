@@ -1181,7 +1181,7 @@ tr:last-child td { border-bottom: none; }
       <div class="robot-intro-name">TAMY-BOT · Análise Inteligente</div>
       <div class="robot-intro-text">Monitorando sua carteira em tempo real. Clique em qualquer tendência para ver análise completa da empresa.</div>
     </div>
-    <button class="robot-refresh-btn" onclick="buildRobo()">↻ Atualizar</button>
+    <button class="robot-refresh-btn" onclick="fetchQuotes().then(()=>buildRobo())">↻ Atualizar</button>
   </div>
 
   <div id="robo-content">
