@@ -756,10 +756,13 @@ tr:last-child td { border-bottom: none; }
       <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="2,10 7,4 12,10"/>
       </svg>
-      <span id="pat-change">Atualizado 06/10/2026 · Nubank + B3 + XP + Ext</span>
+      <span id="pat-change">Atualizado 06/10/2026 · Nubank + Caixinhas + B3 + XP + Ext</span>
     </div>
     <div class="hero-pills">
-      <div class="pill"><div class="pill-lbl">Nubank</div><div class="pill-val">R$&nbsp;6.003</div></div>
+      <div class="pill"><div class="pill-lbl">Conta NU</div><div class="pill-val">R$&nbsp;4.208</div></div>
+      <div class="pill"><div class="pill-lbl">RF + Tesouro NU</div><div class="pill-val">R$&nbsp;12.469</div></div>
+      <div class="pill"><div class="pill-lbl">Fundos NU</div><div class="pill-val">R$&nbsp;6.003</div></div>
+      <div class="pill"><div class="pill-lbl">Caixinhas NU</div><div class="pill-val">R$&nbsp;80.352</div></div>
       <div class="pill"><div class="pill-lbl">B3 Nubank</div><div class="pill-val" id="pill-b3">calculando…</div></div>
       <div class="pill"><div class="pill-lbl">Fundos XP</div><div class="pill-val">R$&nbsp;3.791</div></div>
       <div class="pill"><div class="pill-lbl">Ext · R$1.4k/mês</div><div class="pill-val">R$&nbsp;35.000</div></div>
@@ -769,14 +772,14 @@ tr:last-child td { border-bottom: none; }
   <!-- STATS GRID -->
   <div class="g2">
     <div class="stat-card">
-      <div class="stat-lbl">Nubank Conta</div>
-      <div class="stat-val c-green">R$&nbsp;4.208</div>
-      <div class="stat-sub">Saldo em conta · D+0</div>
+      <div class="stat-lbl">Caixinhas Nubank</div>
+      <div class="stat-val c-green">R$&nbsp;80.352</div>
+      <div class="stat-sub">Reserva · Carro · Turbo · +R$7.564/ano</div>
     </div>
     <div class="stat-card">
-      <div class="stat-lbl">Nubank Invest</div>
-      <div class="stat-val">R$&nbsp;6.003</div>
-      <div class="stat-sub">RF + Tesouro + Fundos · 99,2% CDI</div>
+      <div class="stat-lbl">Nubank Carteira</div>
+      <div class="stat-val">R$&nbsp;59.259</div>
+      <div class="stat-sub">B3 + RF + Tesouro + Fundos · +R$7.036/ano</div>
     </div>
     <div class="stat-card">
       <div class="stat-lbl">Melhor hoje</div>
@@ -1053,9 +1056,9 @@ tr:last-child td { border-bottom: none; }
 
   <div class="goal-card" style="margin-bottom:10px;">
     <div class="stat-lbl">Reserva de Emergência</div>
-    <div style="font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;margin:6px 0 10px;color:var(--green)">R$&nbsp;47.468 <span style="font-size:14px;color:var(--fg3)">/ 86%</span></div>
-    <div class="prog-track"><div class="prog-fill" style="width:86%;background:var(--green)"></div></div>
-    <div class="prog-lbls"><span class="c-green">86% concluído</span><span>Meta: R$&nbsp;55.000</span></div>
+    <div style="font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;margin:6px 0 10px;color:var(--green)">R$&nbsp;52.548 <span style="font-size:14px;color:var(--fg3)">/ 95%</span></div>
+    <div class="prog-track"><div class="prog-fill" style="width:95%;background:var(--green)"></div></div>
+    <div class="prog-lbls"><span class="c-green">95% concluído</span><span>Meta: R$&nbsp;55.000</span></div>
   </div>
 
   <div class="goal-card" style="margin-bottom:10px;">
@@ -1065,11 +1068,18 @@ tr:last-child td { border-bottom: none; }
     <div class="prog-lbls"><span class="c-blue">15% concluído</span><span>Meta: R$&nbsp;20.000</span></div>
   </div>
 
-  <div class="goal-card" style="margin-bottom:16px;">
+  <div class="goal-card" style="margin-bottom:10px;">
     <div class="stat-lbl">Renda Passiva — FIIs (dividendos/mês)</div>
     <div style="font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;margin:6px 0 10px;color:var(--purple)">~R$&nbsp;140 <span style="font-size:14px;color:var(--fg3)">/ 28%</span></div>
     <div class="prog-track"><div class="prog-fill" style="width:28%;background:var(--purple)"></div></div>
     <div class="prog-lbls"><span style="color:var(--purple)">28% concluído</span><span>Meta: R$&nbsp;500/mês</span></div>
+  </div>
+
+  <div class="goal-card" style="margin-bottom:16px;">
+    <div class="stat-lbl">Renda Passiva — Fundo Externo</div>
+    <div style="font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;margin:6px 0 10px;color:var(--gold2)">R$&nbsp;1.400<span style="font-size:14px;color:var(--fg3)">/mês · recorrente</span></div>
+    <div class="prog-track"><div class="prog-fill" style="width:100%;background:var(--gold2)"></div></div>
+    <div class="prog-lbls"><span style="color:var(--gold2)">&#10003; Ativo — R$35.000 investidos</span><span>R$16.800/ano</span></div>
   </div>
 
 </div>
@@ -1309,16 +1319,18 @@ function updateTotals(){
   el.style.color=res>=0?'var(--green)':'var(--red)';
 }
 
-const NUBANK_CONTA   = 4208.45;   // conta corrente
-const NUBANK_INVEST  = 6003.41;   // RF + Tesouro + Fundos Nubank (excluindo B3)
-const NUBANK_TOTAL   = NUBANK_CONTA + NUBANK_INVEST;
-const FUNDOS_XP      = 3791.36;   // 4 fundos XP
-const FUNDO_EXTERNO  = 35000;     // rende R$1.400/mês
+const NUBANK_CONTA      = 4208.45;   // conta corrente Nubank
+const NUBANK_RF_TESOURO = 12468.90;  // RF R$7.726,68 + Tesouro R$4.742,22
+const NUBANK_FUNDOS     = 6003.41;   // Fundos internos Nubank
+const NUBANK_CAIXINHAS  = 80352.04;  // todas as caixinhas (Reserva, Carro, Turbo, etc.)
+const FUNDOS_XP         = 3791.36;   // 4 fundos XP
+const FUNDO_EXTERNO     = 35000;     // rende R$1.400/mês (renda passiva mensal)
 
 function updatePatrimonio(){
   const totalB3 = portfolio.filter(a=>a.tipo!=='rf').reduce((s,a)=>s+a.cot*a.qtd,0);
   const totalRF = portfolio.filter(a=>a.tipo==='rf').reduce((s,a)=>s+a.pm*a.qtd,0);
-  const total   = NUBANK_TOTAL + FUNDO_EXTERNO + FUNDOS_XP + totalB3 + totalRF;
+  const total   = NUBANK_CONTA + NUBANK_RF_TESOURO + NUBANK_FUNDOS + NUBANK_CAIXINHAS
+                + FUNDOS_XP + FUNDO_EXTERNO + totalB3 + totalRF;
   const fmtK = v => v>=1000?'R$ '+(v/1).toLocaleString('pt-BR',{maximumFractionDigits:0}):fmt(v);
   const b3El = document.getElementById('pill-b3');
   const patEl = document.getElementById('pat-val');
