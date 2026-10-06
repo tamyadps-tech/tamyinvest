@@ -26,7 +26,7 @@ app.get('/manifest.json', (req, res) => {
   res.sendFile(path.join(__dirname, 'manifest.json'));
 });
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname, { maxAge: 0, etag: false }));
 
 // ── Armazenamento em memória (últimos 30 alertas) ──
 let alertas = [];
@@ -75,6 +75,8 @@ app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
 // ── Serve index.html para qualquer outra rota ───────────────────────────────
 app.get('*', (_req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.set('Pragma', 'no-cache');
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
