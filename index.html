@@ -4,7 +4,7 @@
 <meta name="theme-color" content="#06080f" media="(prefers-color-scheme: dark)">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
@@ -78,6 +78,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px 14px;
+  padding-top: max(16px, calc(env(safe-area-inset-top, 0px) + 10px));
   background: var(--bg);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
@@ -912,6 +913,12 @@ tr:last-child td { border-bottom: none; }
   </div>
   <div class="hdr-right">
     <div class="hdr-date" id="today-date"></div>
+    <button class="btn-theme" onclick="solicitarNotificacao()" id="btn-notif" title="Ativar notificações">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </button>
     <button class="btn-theme" onclick="toggleTheme()" id="theme-btn" title="Alternar tema">
       <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
@@ -1760,29 +1767,54 @@ async function fetchB3SA3History(){
 async function solicitarNotificacao(){
   if(!('Notification' in window)) return;
   if(Notification.permission === 'default'){
-    await Notification.requestPermission();
+    const perm = await Notification.requestPermission();
+    // Atualiza ícone do botão de sino no header
+    atualizarBtnNotif(perm);
+  } else {
+    atualizarBtnNotif(Notification.permission);
   }
 }
 
-function dispararNotificacaoPush(titulo, corpo){
+function atualizarBtnNotif(status){
+  const btn = document.getElementById('btn-notif');
+  if(!btn) return;
+  if(status === 'granted'){
+    btn.title = 'Notificações ativas ✓';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+  } else if(status === 'denied'){
+    btn.title = 'Notificações bloqueadas';
+    btn.style.color = 'var(--red)';
+  }
+}
+
+async function dispararNotificacaoPush(titulo, corpo){
   if(!('Notification' in window)) return;
   if(Notification.permission !== 'granted') return;
   // Evita spam: guarda timestamp do último disparo
   const KEY = 'b3sa3_notif_last';
-  const ultimo = parseInt(localStorage.getItem(KEY)||'0');
-  const agora = Date.now();
-  if(agora - ultimo < 30 * 60 * 1000) return; // máx 1 notif a cada 30 min
-  localStorage.setItem(KEY, agora);
   try {
-    new Notification(titulo, {
+    const ultimo = parseInt(localStorage.getItem(KEY)||'0');
+    const agora = Date.now();
+    if(agora - ultimo < 30 * 60 * 1000) return; // máx 1 notif a cada 30 min
+    localStorage.setItem(KEY, agora);
+  } catch(e){}
+  // iOS requer notificação via Service Worker — nunca new Notification() direto
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    await reg.showNotification(titulo, {
       body: corpo,
-      icon: 'https://cdn-icons-png.flaticon.com/512/4256/4256900.png',
-      badge: 'https://cdn-icons-png.flaticon.com/512/4256/4256900.png',
+      icon: '/icon-192.png',
+      badge: '/icon-192.png',
       tag: 'b3sa3-maxima',
       requireInteraction: true,
-      vibrate: [200, 100, 200]
+      vibrate: [200, 100, 200, 100, 200],
+      data: { url: '/' }
     });
-  } catch(e){}
+  } catch(e){
+    // fallback para navegadores que não têm SW
+    try { new Notification(titulo, { body: corpo, icon: '/icon-192.png', tag: 'b3sa3-maxima' }); } catch(_){}
+  }
 }
 
 function _setCardData(card, classe, tagTxt, titulo, sub){
