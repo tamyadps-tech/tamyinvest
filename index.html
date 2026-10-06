@@ -311,6 +311,8 @@ nav {
 .a-gold   .alert-bar { background: var(--gold2); }
 .a-gold   .alert-tag { background: rgba(232,184,75,.12); color: var(--gold2); }
 .a-blue   .alert-bar { background: var(--blue); }
+.a-blue   .alert-tag { background: rgba(74,144,226,.12); color: var(--blue); }
+.a-blue   .alert-bar { background: var(--blue); }
 .a-blue   .alert-tag { background: rgba(77,124,254,.12); color: var(--blue); }
 .a-purple .alert-bar { background: var(--purple); }
 .a-purple .alert-tag { background: rgba(155,114,240,.12); color: var(--purple); }
@@ -885,12 +887,60 @@ tr:last-child td { border-bottom: none; }
         <div class="alert-sub">Avalie realizar parcialmente antes do 2º turno para proteger lucro.</div>
       </div>
     </div>
-    <div class="alert-item a-red" onclick="openModal('CSAN3','venda')">
+    <div class="alert-item a-gold" onclick="openModal('RENT3','oportunidade')">
       <div class="alert-bar"></div>
       <div class="alert-body">
-        <div class="alert-tag">Atenção</div>
-        <div class="alert-title">CSAN3 · −30,2% no PM</div>
-        <div class="alert-sub">Sem catalisador claro de recuperação. Considere saída da posição.</div>
+        <div class="alert-tag">🤖 Robô · Oportunidade</div>
+        <div class="alert-title">RENT3 · Localiza em baixa</div>
+        <div class="alert-sub">Queda por juros altos mas ciclo de cortes beneficia diretamente. Upside estimado +35%.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROBÔ DE OPORTUNIDADES -->
+  <div class="sec-lbl">🤖 Radar de Oportunidades</div>
+  <div id="robo-oportunidades" style="padding:0 0 16px;">
+    <div class="insight" style="margin:0 0 12px;">
+      <strong>Cenário macro ·</strong> Selic em corte (−125bps desde março), Ibovespa +13% no ano mas small caps e setores de crédito ficaram para trás — criando janela de entrada.
+    </div>
+    <div class="alert-item a-green" style="margin-bottom:8px;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">Convicção 9/10 · Curto prazo</div>
+        <div class="alert-title">EMBJ3 — Embraer · Upside +24%</div>
+        <div class="alert-sub">Carteira recorde de pedidos, contratos militares e aviação comercial aquecida. Pouco coberta, grande assimetria.</div>
+      </div>
+    </div>
+    <div class="alert-item a-green" style="margin-bottom:8px;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">Convicção 8/10 · Médio prazo</div>
+        <div class="alert-title">RENT3 — Localiza · Upside +35%</div>
+        <div class="alert-sub">Queda por custo de dívida alto. Cada corte da Selic melhora resultado diretamente. Líder consolidado.</div>
+      </div>
+    </div>
+    <div class="alert-item a-blue" style="margin-bottom:8px;">
+      <div class="alert-bar" style="background:var(--blue)"></div>
+      <div class="alert-body">
+        <div class="alert-tag">Convicção 8/10 · Médio prazo</div>
+        <div class="alert-title">RDOR3 — Rede D'Or · Upside +40%</div>
+        <div class="alert-sub">Você já tem na carteira! Juros menores reduzem custo de expansão. Setor de saúde cresce independente do ciclo.</div>
+      </div>
+    </div>
+    <div class="alert-item a-blue" style="margin-bottom:8px;">
+      <div class="alert-bar" style="background:var(--blue)"></div>
+      <div class="alert-body">
+        <div class="alert-tag">Convicção 8/10 · Médio prazo</div>
+        <div class="alert-title">COGN3 — Cogna · Upside +82%</div>
+        <div class="alert-sub">Reestruturação avançada + queda de juros = alavancagem positiva. Alto risco, alto retorno potencial.</div>
+      </div>
+    </div>
+    <div class="alert-item a-gold" style="margin-bottom:0;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">Convicção 7/10 · Médio prazo</div>
+        <div class="alert-title">DASA3 — Dasa Diagnósticos · Upside +65%</div>
+        <div class="alert-sub">Em baixa por dívida elevada. Corte de Selic alivia custo financeiro e pode ser o gatilho de recuperação.</div>
       </div>
     </div>
   </div>
@@ -936,14 +986,6 @@ tr:last-child td { border-bottom: none; }
 
   <div class="sec-lbl">Urgente</div>
   <div class="alert-list">
-    <div class="alert-item a-red" onclick="openModal('CSAN3','venda')">
-      <div class="alert-bar"></div>
-      <div class="alert-body">
-        <div class="alert-tag">Considere venda</div>
-        <div class="alert-title">CSAN3 · −30,2% no preço médio</div>
-        <div class="alert-sub">200 cotas acumulam prejuízo de R$332. Toque para ver análise completa.</div>
-      </div>
-    </div>
     <div class="alert-item a-gold" onclick="openModal('BBAS3','monitorar')">
       <div class="alert-bar"></div>
       <div class="alert-body">
@@ -1101,13 +1143,13 @@ tr:last-child td { border-bottom: none; }
       <div style="flex:1">
         <div class="legend-row" style="cursor:pointer" onclick="openModal('WEGE3','manter')" title="Ver detalhes de Crescimento"><div class="legend-dot" style="background:var(--blue)"></div><span class="legend-lbl">Crescimento</span><span class="legend-pct" style="color:var(--blue)">38%</span></div>
         <div class="legend-row" style="cursor:pointer" onclick="openModal('PETR4','manter')" title="Ver detalhes de Valor / Dividendos"><div class="legend-dot" style="background:var(--gold2)"></div><span class="legend-lbl">Valor / Div.</span><span class="legend-pct" style="color:var(--gold2)">21%</span></div>
-        <div class="legend-row" style="cursor:pointer" onclick="openModal('CSAN3','venda')" title="Ver detalhes de Especulativos"><div class="legend-dot" style="background:var(--red)"></div><span class="legend-lbl">Especulativo</span><span class="legend-pct" style="color:var(--red)">18%</span></div>
+        <div class="legend-row" style="cursor:pointer" onclick="openModal('TTEN3','aguardar')" title="Ver detalhes de Especulativos"><div class="legend-dot" style="background:var(--red)"></div><span class="legend-lbl">Especulativo</span><span class="legend-pct" style="color:var(--red)">10%</span></div>
         <div class="legend-row" style="cursor:pointer" onclick="openModal('TRXF11','carregar')" title="Ver detalhes de FIIs"><div class="legend-dot" style="background:var(--purple)"></div><span class="legend-lbl">FIIs</span><span class="legend-pct" style="color:var(--purple)">5%</span></div>
         <div class="legend-row" style="margin:0;cursor:pointer" onclick="openModal('EGIE3','manter')" title="Ver detalhes de Renda Fixa/Reserva"><div class="legend-dot" style="background:var(--green)"></div><span class="legend-lbl">Reserva + RF</span><span class="legend-pct" style="color:var(--green)">18%</span></div>
       </div>
     </div>
     <div class="insight" style="margin-top:16px;">
-      Ideal para perfil arrojado-seguro: crescimento 40% · valor 25% · especulativo 15% · FII 10% · reserva 10%. <strong>Levemente sobre-exposta a especulativos — priorize saída de CSAN3.</strong>
+      Ideal para perfil arrojado-seguro: crescimento 40% · valor 25% · especulativo 10% · FII 10% · reserva 15%. <strong>Carteira equilibrada — monitore TTEN3 e TRXF11 que estão abaixo do PM.</strong>
     </div>
   </div>
 
@@ -1585,15 +1627,6 @@ var companyData = {
     riscos:['Exposição climática (Rio Grande do Sul)','Commodities agrícolas voláteis','Menor liquidez'],
     acoes:{
       manter:'PM R$14,39, cotação ~R$11,69 (−18,8%). Abaixo do PM — ainda pressionada pelos impactos das enchentes no RS (2024). Aguardar recuperação operacional. Não vender.'
-    }
-  },
-  CSAN3:  { name:'Cosan S.A.', sector:'Conglomerado / Holding', setor:'Energia / Conglomerado', subsetor:'Combustíveis, Gás, Açúcar',tipo:'acoes',
-    desc:'Holding com participações em Raízen (biocombustíveis), Comgás (gás canalizado), Rumo (logística) e Moove (lubrificantes). Alta dívida corporativa.',
-    pontos:['Portfólio diversificado e resiliente','Rumo: maior operadora de ferrovias do Brasil','Raízen: líder em etanol e biocombustíveis'],
-    riscos:['Holding com múltiplos níveis de dívida','Governança complexa — difícil precificar','Juros altos consomem resultado financeiro'],
-    acoes:{
-      venda:'PM R$5,49, cotação ~R$3,83 (−30,2%). Posição no prejuízo há meses. Sem catalisador de recuperação no curto prazo. A dívida corporativa da CSAN pesa nos resultados com a Selic em 10,5%+.',
-      'monitorar-venda':'<strong>🎯 Estratégia: aguardar breakeven.</strong> PM R$5,49 · cotação R$3,83 (−30,2%). Faltam R$1,66/cota para o ponto de saída. Com 200 cotas, o breakeven total é R$1.098. A CSAN tem o maior caminho a percorrer — paciência necessária. O robô vai alertar imediatamente quando a cotação atingir R$5,49. Catalisador possível: venda de alguma subsidiária (Comgás, Moove) ou redução de Selic abaixo de 9%.'
     }
   },
   GARE11: { name:'Hedge Fundo Imobiliário GARE11', sector:'FII — Renda Urbana / Logística', setor:'Fundos Imobiliários', subsetor:'Renda Urbana',tipo:'fiis',
