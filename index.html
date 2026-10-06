@@ -1388,6 +1388,7 @@ function go(id){
   document.getElementById('screen-'+id).classList.add('active');
   document.getElementById('nb-'+id).classList.add('active');
   document.querySelector('.main').scrollTop=0;
+  if(id==='robo') buildRobo();
 }
 
 function toggleTheme(){
