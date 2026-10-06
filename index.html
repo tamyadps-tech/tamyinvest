@@ -722,86 +722,127 @@ tr:last-child td { border-bottom: none; }
   line-height: 1.5;
 }
 
-/* ─── MOBILE RESPONSIVO ─── */
+/* ── Cards mobile (carteira) ── */
+.mob-card {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.mob-card:active { background: var(--layer3); }
+.mob-card:last-child { border-bottom: none; }
+.mob-card-left  { flex: 1; min-width: 0; }
+.mob-card-right { text-align: right; flex-shrink: 0; }
+.mob-ticker     { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 700; color: var(--fg); }
+.mob-qtd        { font-size: 12px; color: var(--fg3); margin-top: 1px; }
+.mob-pct        { font-size: 17px; font-weight: 800; line-height: 1; }
+.mob-rs         { font-size: 12px; color: var(--fg2); margin-top: 2px; }
+.mob-badge      { margin-top: 6px; display: inline-block; }
+.mob-pm         { font-size: 11px; color: var(--fg3); margin-top: 1px; }
+.mob-cot        { font-size: 13px; color: var(--fg2); font-family: 'JetBrains Mono', monospace; }
+
+/* ══════════════════════════════════════════
+   MOBILE — reforma completa ≤ 600 px
+   ══════════════════════════════════════════ */
 @media (max-width: 600px) {
-  /* Base: aumenta fonte geral */
+
+  /* ── Base ── */
   body { font-size: 15px; }
 
-  /* Hero: valor principal menor para caber */
-  .hero-value { font-size: 28px; letter-spacing: -1px; }
-  .hero { padding: 20px 16px 18px; }
-  .pill { min-width: 70px; padding: 9px 10px; }
-  .pill-lbl { font-size: 10px; }
-  .pill-val  { font-size: 13px; }
+  /* ── Header ── */
+  .hdr { padding: 0 14px; }
+  .hdr-name { font-size: 17px; }
+  .hdr-date { font-size: 12px; }
 
-  /* Stat cards: textos maiores */
-  .stat-lbl { font-size: 11px; }
-  .stat-val  { font-size: 19px; }
-  .stat-sub  { font-size: 12px; }
+  /* ── Hero ── */
+  .hero        { padding: 18px 16px 16px; border-radius: 18px; margin: 8px 12px 0; }
+  .hero-lbl    { font-size: 11px; }
+  .hero-value  { font-size: 36px; letter-spacing: -1.5px; }
+  .hero-sub    { font-size: 12px; }
+  .pills       { gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .pill        { min-width: 0; flex: 1 1 calc(50% - 4px); padding: 10px 12px; border-radius: 12px; }
+  .pill-lbl    { font-size: 11px; }
+  .pill-val    { font-size: 14px; }
 
-  /* Section label */
-  .sec-lbl { font-size: 11px; }
+  /* ── Stat grid ── */
+  .g2 { grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 12px 0; }
+  .stat-card  { padding: 12px 14px; border-radius: 14px; }
+  .stat-lbl   { font-size: 11px; }
+  .stat-val   { font-size: 20px; }
+  .stat-sub   { font-size: 11px; line-height: 1.4; }
 
-  /* Alert items: mais respiração */
-  .alert-tag   { font-size: 10px; padding: 3px 8px; }
-  .alert-title { font-size: 14px; }
-  .alert-sub   { font-size: 12px; }
+  /* ── Alert card B3SA3 ── */
+  .alert-item  { border-radius: 14px; padding: 0; }
+  .alert-tag   { font-size: 11px; padding: 4px 10px; border-radius: 8px 0 8px 0; }
+  .alert-title { font-size: 15px; font-weight: 700; }
+  .alert-sub   { font-size: 12px; line-height: 1.5; }
+  .alert-body  { padding: 12px 14px; }
 
-  /* Nav bar: ícones e labels maiores */
-  .nb { font-size: 11px; gap: 4px; }
-  .nb svg { width: 26px; height: 26px; }
-  --nav-h: 72px;
+  /* ── Section label ── */
+  .sec-lbl { font-size: 11px; padding: 16px 14px 8px; letter-spacing: .12em; }
 
-  /* Tabela: scroll horizontal já existe, só aumentar fonte */
-  table { font-size: 13px; }
-  th    { font-size: 10px; padding: 10px 12px; }
-  td    { padding: 13px 12px; font-size: 13px; }
-  .tk   { font-size: 13px; }
-  .badge { font-size: 10px; padding: 4px 9px; }
+  /* ── Score ── */
+  .score-wrap      { margin: 0 12px; border-radius: 16px; padding: 18px 16px; }
+  .score-num       { font-size: 56px; }
+  .score-meta-top  { font-size: 14px; }
+  .score-meta-bot  { font-size: 12px; }
+  .srow-name       { font-size: 13px; }
+  .srow-score      { font-size: 13px; }
 
-  /* Score/Meta */
-  .score-num    { font-size: 60px; }
-  .score-meta-top { font-size: 14px; }
-  .score-meta-bot { font-size: 12px; }
-  .srow-name    { font-size: 13px; }
-  .srow-score   { font-size: 12px; }
-  .goal-pct     { font-size: 48px; }
-  .goal-desc    { font-size: 13px; }
-  .prog-lbls    { font-size: 12px; }
+  /* ── Metas ── */
+  .goal-pct  { font-size: 44px; }
+  .goal-desc { font-size: 13px; }
+  .prog-lbls { font-size: 12px; }
 
-  /* Cenário */
-  .cen-title { font-size: 15px; }
-  .cen-prob  { font-size: 12px; }
-  .cen-delta { font-size: 22px; }
+  /* ── Cenários ── */
+  .cen-title { font-size: 14px; }
+  .cen-prob  { font-size: 11px; }
+  .cen-delta { font-size: 20px; }
   .cen-row-lbl, .cen-row-val { font-size: 13px; }
 
-  /* Análise / donut */
+  /* ── Análise ── */
   .legend-lbl, .legend-pct { font-size: 13px; }
-  .donut-wrap { gap: 14px; }
+  .donut-wrap { gap: 12px; }
 
-  /* Liquidez */
+  /* ── Liquidez ── */
   .liq-name  { font-size: 13px; }
   .liq-prazo { font-size: 12px; }
   .liq-pct   { font-size: 13px; }
 
-  /* Oportunidades */
-  .opp-ticker { font-size: 14px; }
+  /* ── Internacional ── */
+  .opp-item   { padding: 12px 14px; border-radius: 14px; gap: 10px; }
+  .opp-ticker { font-size: 14px; font-weight: 700; }
   .opp-desc   { font-size: 12px; }
+  .ctry       { width: 32px; height: 32px; font-size: 10px; border-radius: 8px; flex-shrink: 0; }
 
-  /* Insight box */
-  .insight { font-size: 13px; }
+  /* ── Insight ── */
+  .insight { font-size: 13px; line-height: 1.6; }
 
-  /* Modal */
-  .modal-sheet { max-height: 90vh; }
-  .mod-ticker  { font-size: 20px; }
+  /* ── Modal ── */
+  .modal-sheet { max-height: 92vh; border-radius: 24px 24px 0 0; }
+  .mod-ticker  { font-size: 22px; }
 
-  /* Tbl footer */
+  /* ── Nav ── */
+  .nb     { font-size: 10px; gap: 3px; padding: 4px 0; }
+  .nb svg { width: 22px; height: 22px; }
+
+  /* ── Footer totais ── */
   .tbl-footer-lbl { font-size: 11px; }
-  .tbl-footer-val { font-size: 17px; }
+  .tbl-footer-val { font-size: 18px; }
 
-  /* Header */
-  .hdr-name { font-size: 16px; }
-  .hdr-date { font-size: 12px; }
+  /* ═══════════════════════════════════════
+     TABELA → CARDS em mobile
+     Esconde a tabela e mostra os cards
+     ═══════════════════════════════════════ */
+  .tbl-wrap { display: none !important; }
+  #mobile-cards { display: flex !important; }
+
+  /* ── Filtros ── */
+  .tab-row { gap: 6px; padding: 10px 12px 0; flex-wrap: wrap; }
+  .tab-btn { font-size: 13px; padding: 7px 14px; border-radius: 20px; }
 }
 </style>
 
@@ -1101,6 +1142,8 @@ tr:last-child td { border-bottom: none; }
         <tbody id="portfolio-tbody"></tbody>
       </table>
     </div>
+    <!-- Cards para mobile (hidden no desktop via CSS) -->
+    <div id="mobile-cards" style="display:none;flex-direction:column;gap:0;"></div>
   </div>
   <div class="tbl-footer">
     <div>
@@ -1499,29 +1542,63 @@ var portfolio = [
   {ticker:'TRXF11', tipo:'fiis',  qtd:15,  pm:91.90,  cot:71.17, acao:'aguardar'},
 ];
 
-const bCls = {manter:'b-manter',comprar:'b-comprar',vender:'b-vender',reforcar:'b-reforcar',aguardar:'b-aguardar'};
-const bTxt = {manter:'MANTER',comprar:'COMPRAR',vender:'VENDER',reforcar:'REFORÇAR',aguardar:'AGUARDAR'};
+const bCls = {
+  manter:'b-manter', comprar:'b-comprar', vender:'b-vender',
+  reforcar:'b-reforcar', aguardar:'b-aguardar', monitorar:'b-aguardar',
+  carregar:'b-reforcar', lucro:'b-comprar', 'monitorar-venda':'b-aguardar'
+};
+const bTxt = {
+  manter:'MANTER', comprar:'COMPRAR', vender:'VENDER',
+  reforcar:'REFORÇAR', aguardar:'AGUARDAR', monitorar:'MONITOR',
+  carregar:'CARREGAR', lucro:'LUCRO 🎯', 'monitorar-venda':'MONITOR'
+};
 let curFilter = 'todos';
 
 function fmt(n,d=2){ return n.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d}); }
 
 function buildTable(f='todos'){
   curFilter = f;
-  const rows = f==='todos' ? portfolio : portfolio.filter(a=>a.tipo===f);
-  document.getElementById('portfolio-tbody').innerHTML = rows
-    .sort((a,b)=>((b.cot-b.pm)/b.pm)-((a.cot-a.pm)/a.pm))
-    .map(a=>{
-      const pct=(a.cot-a.pm)/a.pm*100, rs=(a.cot-a.pm)*a.qtd, cls=pct>=0?'c-green':'c-red';
-      return `<tr onclick="openModal('${a.ticker}','${a.acao}')" style="cursor:pointer">
-        <td><span class="tk">${a.ticker}</span></td>
-        <td>${a.qtd}</td>
-        <td class="pm-val">R$${fmt(a.pm)}</td>
-        <td>R$${fmt(a.cot)}</td>
-        <td class="${cls}">${pct>=0?'+':''}${fmt(pct)}%</td>
-        <td class="${cls}">${rs>=0?'+':'−'}R$${fmt(Math.abs(rs),0)}</td>
-        <td><span class="badge ${bCls[a.acao]}">${bTxt[a.acao]}</span></td>
-      </tr>`;
-    }).join('');
+  const rows = (f==='todos' ? portfolio : portfolio.filter(a=>a.tipo===f))
+    .slice().sort((a,b)=>((b.cot-b.pm)/b.pm)-((a.cot-a.pm)/a.pm));
+
+  const acaoSafe = a => a.acao && bTxt[a.acao] ? a.acao : 'manter';
+
+  // ── Tabela desktop ──
+  document.getElementById('portfolio-tbody').innerHTML = rows.map(a=>{
+    const acao = acaoSafe(a);
+    const pct=(a.cot-a.pm)/a.pm*100, rs=(a.cot-a.pm)*a.qtd, cls=pct>=0?'c-green':'c-red';
+    return `<tr onclick="openModal('${a.ticker}','${acao}')" style="cursor:pointer">
+      <td><span class="tk">${a.ticker}</span></td>
+      <td>${a.qtd}</td>
+      <td class="pm-val">R$${fmt(a.pm)}</td>
+      <td>R$${fmt(a.cot)}</td>
+      <td class="${cls}">${pct>=0?'+':''}${fmt(pct)}%</td>
+      <td class="${cls}">${rs>=0?'+':'−'}R$${fmt(Math.abs(rs),0)}</td>
+      <td><span class="badge ${bCls[acao]}">${bTxt[acao]}</span></td>
+    </tr>`;
+  }).join('');
+
+  // ── Cards mobile ──
+  const mc = document.getElementById('mobile-cards');
+  if(mc) mc.innerHTML = rows.map(a=>{
+    const acao = acaoSafe(a);
+    const pct=(a.cot-a.pm)/a.pm*100, rs=(a.cot-a.pm)*a.qtd, cls=pct>=0?'c-green':'c-red';
+    const sinal = pct>=0?'+':'';
+    const rsSinal = rs>=0?'+':'−';
+    return `<div class="mob-card" onclick="openModal('${a.ticker}','${acao}')">
+      <div class="mob-card-left">
+        <div class="mob-ticker">${a.ticker}</div>
+        <div class="mob-qtd">${a.qtd} cotas · PM R$${fmt(a.pm)}</div>
+        <div class="mob-badge"><span class="badge ${bCls[acao]}">${bTxt[acao]}</span></div>
+      </div>
+      <div class="mob-card-right">
+        <div class="mob-pct ${cls}">${sinal}${fmt(pct,1)}%</div>
+        <div class="mob-cot">R$${fmt(a.cot)}</div>
+        <div class="mob-rs ${cls}">${rsSinal}R$${fmt(Math.abs(rs),0)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
   updateTotals();
 }
 
