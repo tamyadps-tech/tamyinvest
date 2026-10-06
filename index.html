@@ -1252,16 +1252,16 @@ const portfolio = [
   {ticker:'PRIO3',    tipo:'acoes', qtd:20,  pm:53.43, cot:64.36, acao:'manter'},
   {ticker:'WEGE3',    tipo:'acoes', qtd:70,  pm:50.35, cot:50.00, acao:'manter'},
   {ticker:'RDOR3',    tipo:'acoes', qtd:100, pm:25.00, cot:27.00, acao:'manter'},
-  {ticker:'BBAS3',    tipo:'acoes', qtd:100, pm:26.67, cot:26.44, acao:'aguardar'},
-  {ticker:'VALE3',    tipo:'acoes', qtd:65,  pm:74.17, cot:78.20, acao:'manter'},
+  {ticker:'BBAS3',    tipo:'acoes', qtd:100, pm:26.67, cot:26.44, acao:'monitorar-venda'},
+  {ticker:'VALE3',    tipo:'acoes', qtd:65,  pm:74.17, cot:78.20, acao:'monitorar-venda'},
   {ticker:'ITUB4',    tipo:'acoes', qtd:20,  pm:42.24, cot:49.48, acao:'manter'},
   {ticker:'CSMG3',    tipo:'acoes', qtd:30,  pm:57.40, cot:61.03, acao:'manter'},
   {ticker:'EGIE3',    tipo:'acoes', qtd:30,  pm:32.78, cot:31.64, acao:'manter'},
   {ticker:'DIRR3',    tipo:'acoes', qtd:300, pm:11.42, cot:11.35, acao:'manter'},
   {ticker:'SMFT3',    tipo:'acoes', qtd:45,  pm:18.61, cot:17.77, acao:'manter'},
-  {ticker:'PLPL3',    tipo:'acoes', qtd:300, pm:8.33,  cot:7.20,  acao:'aguardar'},
+  {ticker:'PLPL3',    tipo:'acoes', qtd:300, pm:8.33,  cot:7.20,  acao:'monitorar-venda'},
   {ticker:'TTEN3',    tipo:'acoes', qtd:80,  pm:14.39, cot:11.69, acao:'manter'},
-  {ticker:'CSAN3',    tipo:'acoes', qtd:200, pm:5.49,  cot:3.83,  acao:'vender'},
+  {ticker:'CSAN3',    tipo:'acoes', qtd:200, pm:5.49,  cot:3.83,  acao:'monitorar-venda'},
   // FIIs
   {ticker:'GARE11',   tipo:'fiis',  qtd:100, pm:8.38,  cot:8.46,  acao:'manter'},
   {ticker:'IRIM11',   tipo:'fiis',  qtd:58,  pm:67.90, cot:63.40, acao:'manter'},
@@ -1480,7 +1480,8 @@ var companyData = {
     acoes:{
       monitorar:'Você comprou no rally pós-eleição. Aguarde consolidação — BBAS3 pode recuar 3–5% antes de seguir. Não vender agora, mas não reforçar ainda.',
       eleitoral:'Flávio vence: BBAS3 tende a +12–18% com expectativa de autonomia e foco em resultado. Lula vence: −8–12% por risco de interferência política. Monitorar resultado.',
-      aguardar:'Aguardar estabilização após o rally. Próximo suporte em R$24.'
+      aguardar:'Aguardar estabilização após o rally. Próximo suporte em R$24.',
+      'monitorar-venda':'<strong>🎯 Estratégia: aguardar breakeven.</strong> PM R$26,67 · cotação atual R$26,44 (−0,9%). Falta muito pouco! BBAS3 está quase no ponto de saída. Quando a cotação atingir R$26,67+, vender toda a posição (100 cotas). Dividend yield elevado enquanto aguarda — posição produtiva.'
     }
   },
   VALE3:  { name:'Vale S.A.', sector:'Mineração / Commodities', setor:'Mineração', subsetor:'Minério de Ferro e Metais',tipo:'acoes',
@@ -1488,7 +1489,8 @@ var companyData = {
     pontos:['Dividendos extraordinários recorrentes','Maior reserva de minério de ferro do mundo','Expansão em níquel e cobre (transição energética)'],
     riscos:['Preço do minério caiu de US$140 para US$90–100/t','Desaceleração da construção civil na China','Dívida com Samarco (Mariana)'],
     acoes:{
-      manter:'Você tem 65 cotas com PM R$74,17, cotação ~R$78,20 (+5,4%). Minério de ferro estabilizando. Manter exposição — China sinalizando novos estímulos à construção.'
+      manter:'Você tem 65 cotas com PM R$74,17, cotação ~R$78,20 (+5,4%). Minério de ferro estabilizando. Manter exposição — China sinalizando novos estímulos à construção.',
+      'monitorar-venda':'<strong>🔔 ATENÇÃO: VALE3 JÁ SUPEROU O PM!</strong> PM R$74,17 · cotação R$78,20 (+5,4%). Você está no lucro! Posição com 65 cotas acumula +R$261,95 de ganho. <strong>Hora de vender!</strong> Execute a ordem de venda agora para realizar o lucro e realocar o capital.'
     }
   },
   ITUB4:  { name:'Itaú Unibanco PN', sector:'Bancos / Financeiro', setor:'Financeiro / Bancos', subsetor:'Banco Privado',tipo:'acoes',
@@ -1539,7 +1541,8 @@ var companyData = {
     riscos:['Campos maduros têm declínio natural de produção sem reinvestimento','Menor liquidez diária vs. PETR4/PRIO3','Preço do Brent abaixo de US$65 pressiona as margens'],
     acoes:{
       aguardar:'PM R$8,33, cotação ~R$7,20 (−13,6%). Posição abaixo do PM. Sem catalisador claro no curto prazo — nova descoberta ou resultado trimestral forte pode reverter. <strong>Não vender agora</strong>: realizar prejuízo aqui travaria a perda. Aguardar próximo resultado (3T26) antes de decidir.',
-      manter:'Empresa sólida com geração de caixa positiva. Manter enquanto fundamentos do setor sustentarem. Acompanhar preço do Brent.'
+      manter:'Empresa sólida com geração de caixa positiva. Manter enquanto fundamentos do setor sustentarem. Acompanhar preço do Brent.',
+      'monitorar-venda':'<strong>🎯 Estratégia: aguardar breakeven.</strong> PM R$8,33 · cotação R$7,20 (−13,6%). Faltam R$1,13/cota para o ponto de saída. Com 300 cotas, o breakeven total é R$2.499. O robô vai alertar assim que a cotação atingir R$8,33. <strong>Não vender antes disso</strong>. Gatilho esperado: resultado 3T26 ou valorização do Brent acima de US$85.'
     }
   },
   TTEN3:  { name:'3tentos', sector:'Agronegócio / Beneficiamento', setor:'Agronegócio', subsetor:'Insumos, Beneficiamento e Originação',tipo:'acoes',
@@ -1555,7 +1558,8 @@ var companyData = {
     pontos:['Portfólio diversificado e resiliente','Rumo: maior operadora de ferrovias do Brasil','Raízen: líder em etanol e biocombustíveis'],
     riscos:['Holding com múltiplos níveis de dívida','Governança complexa — difícil precificar','Juros altos consomem resultado financeiro'],
     acoes:{
-      venda:'PM R$5,49, cotação ~R$3,83 (−30,2%). Posição no prejuízo há meses. Sem catalisador de recuperação no curto prazo. A dívida corporativa da CSAN pesa nos resultados com a Selic em 10,5%+. <strong>Recomendação: vender e realocar em ativos com melhor relação risco/retorno.</strong> O capital pode render mais em DIRR3 ou IVVB11.'
+      venda:'PM R$5,49, cotação ~R$3,83 (−30,2%). Posição no prejuízo há meses. Sem catalisador de recuperação no curto prazo. A dívida corporativa da CSAN pesa nos resultados com a Selic em 10,5%+.',
+      'monitorar-venda':'<strong>🎯 Estratégia: aguardar breakeven.</strong> PM R$5,49 · cotação R$3,83 (−30,2%). Faltam R$1,66/cota para o ponto de saída. Com 200 cotas, o breakeven total é R$1.098. A CSAN tem o maior caminho a percorrer — paciência necessária. O robô vai alertar imediatamente quando a cotação atingir R$5,49. Catalisador possível: venda de alguma subsidiária (Comgás, Moove) ou redução de Selic abaixo de 9%.'
     }
   },
   GARE11: { name:'Hedge Fundo Imobiliário GARE11', sector:'FII — Renda Urbana / Logística', setor:'Fundos Imobiliários', subsetor:'Renda Urbana',tipo:'fiis',
@@ -1617,15 +1621,16 @@ var companyData = {
 };
 
 var alertaJustificativas = {
-  venda:       { cor:'var(--red)',    tag:'Recomendação de Venda', label:'venda' },
-  monitorar:   { cor:'var(--gold2)', tag:'Monitorar', label:'monitorar' },
-  lucro:       { cor:'var(--green)',  tag:'Realizar Lucro', label:'lucro' },
-  reforcar:    { cor:'var(--blue)',   tag:'Oportunidade', label:'reforcar' },
-  internacional:{ cor:'var(--blue)', tag:'Diversificação Internacional', label:'internacional' },
-  manter:      { cor:'var(--green)',  tag:'Posição Sólida', label:'manter' },
-  carregar:    { cor:'var(--purple)', tag:'Longo Prazo', label:'carregar' },
-  eleitoral:   { cor:'var(--gold2)', tag:'Cenário Eleitoral', label:'eleitoral' },
-  aguardar:    { cor:'var(--gold2)', tag:'Aguardar', label:'aguardar' },
+  venda:          { cor:'var(--red)',    tag:'Recomendação de Venda', label:'venda' },
+  'monitorar-venda':{ cor:'#f87171',   tag:'🎯 Aguardando Breakeven', label:'monitorar-venda' },
+  monitorar:      { cor:'var(--gold2)', tag:'Monitorar', label:'monitorar' },
+  lucro:          { cor:'var(--green)',  tag:'Realizar Lucro', label:'lucro' },
+  reforcar:       { cor:'var(--blue)',   tag:'Oportunidade', label:'reforcar' },
+  internacional:  { cor:'var(--blue)', tag:'Diversificação Internacional', label:'internacional' },
+  manter:         { cor:'var(--green)',  tag:'Posição Sólida', label:'manter' },
+  carregar:       { cor:'var(--purple)', tag:'Longo Prazo', label:'carregar' },
+  eleitoral:      { cor:'var(--gold2)', tag:'Cenário Eleitoral', label:'eleitoral' },
+  aguardar:       { cor:'var(--gold2)', tag:'Aguardar', label:'aguardar' },
 };
 
 function openModal(ticker, contexto){
@@ -1835,8 +1840,10 @@ function buildRobo(){
   const emRisco     = analises.filter(a=>a.pct<=-10).sort((a,b)=>a.pct-b.pct);
   const monitorar   = analises.filter(a=>a.pct>-10&&a.pct<10).sort((a,b)=>a.pct-b.pct);
   const oportunidade= analises.filter(a=>a.pct<=-5&&a.pct>-15&&a.acao!=='vender').sort((a,b)=>a.pct-b.pct);
-  const maxAlerts   = analises.filter(a=>a.isNear5dHigh);
-  const recovering  = analises.filter(a=>a.recovering);
+  const maxAlerts      = analises.filter(a=>a.isNear5dHigh);
+  const recovering     = analises.filter(a=>a.recovering);
+  const monitorVenda   = analises.filter(a=>a.acao==='monitorar-venda');
+  const vendaDisparada = monitorVenda.filter(a=>a.cot >= a.pm); // atingiu breakeven → VENDER!
 
   const totalB3gain = analises.reduce((s,a)=>s+a.rs,0);
   const emLucro     = analises.filter(a=>a.pct>0).length;
@@ -1865,6 +1872,50 @@ function buildRobo(){
   }
 
   let html = '';
+
+  // ── 🚨 PAINEL MONITORAMENTO DE VENDA (breakeven) ──
+  if(monitorVenda.length){
+    html += `<div style="background:rgba(248,113,113,0.07);border:1.5px solid rgba(248,113,113,0.35);border-radius:14px;padding:14px 14px 10px;margin-bottom:4px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:18px">🎯</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#f87171;letter-spacing:.3px">MONITORAMENTO DE VENDA</div>
+          <div style="font-size:11px;color:var(--fg3)">Aguardando breakeven (≥ preço médio). Não vender antes disso.</div>
+        </div>
+      </div>
+      ${monitorVenda.map(a=>{
+        const faltaPct  = ((a.pm - a.cot) / a.cot * 100);
+        const faltaR    = (a.pm - a.cot) * a.qtd;
+        const atingiu   = a.cot >= a.pm;
+        const barPct    = Math.min(100, Math.max(2, (a.cot / a.pm) * 100));
+        const color     = atingiu ? '#4ade80' : '#f87171';
+        const spark     = sparklineSVG(a.hist5d, color);
+        return `<div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px 12px;margin-bottom:8px${atingiu?';border:1.5px solid #4ade80':''}" onclick="openModal('${a.ticker}','monitorar-venda')" style="cursor:pointer">
+          ${atingiu ? `<div style="background:#4ade80;color:#000;font-size:10px;font-weight:800;padding:2px 10px;border-radius:20px;display:inline-block;margin-bottom:6px;letter-spacing:.5px">🔔 ATINGIU BREAKEVEN — HORA DE VENDER!</div>` : ''}
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:700;color:var(--fg1)">${a.ticker}
+                <span style="font-weight:400;color:var(--fg3);font-size:11px"> · ${a.qtd} cotas</span>
+              </div>
+              <div style="display:flex;gap:16px;margin:4px 0;font-size:11px;color:var(--fg3)">
+                <span>PM <strong style="color:var(--fg1)">R$${a.pm.toFixed(2)}</strong></span>
+                <span>Cot <strong style="color:${color}">R$${a.cot.toFixed(2)}</strong></span>
+                ${atingiu
+                  ? `<span style="color:#4ade80;font-weight:700">✓ LUCRO R$${Math.abs(a.rs).toLocaleString('pt-BR',{maximumFractionDigits:0})}</span>`
+                  : `<span style="color:#f87171">Falta R$${Math.abs(faltaR).toLocaleString('pt-BR',{maximumFractionDigits:0})} (${Math.abs(faltaPct).toFixed(1)}%↑)</span>`
+                }
+              </div>
+              <div style="background:rgba(255,255,255,0.08);border-radius:4px;height:4px;overflow:hidden;margin-top:2px">
+                <div style="height:100%;width:${barPct}%;background:${color};border-radius:4px;transition:width .4s"></div>
+              </div>
+              <div style="font-size:10px;color:var(--fg3);margin-top:3px">${barPct.toFixed(0)}% do caminho até o PM</div>
+            </div>
+            ${spark}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
 
   // ── ALERTAS DE MÁXIMA 5 DIAS ──
   if(maxAlerts.length){
