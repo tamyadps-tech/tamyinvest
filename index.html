@@ -961,12 +961,12 @@ tr:last-child td { border-bottom: none; }
         <div class="alert-sub">Ibovespa bateu recorde hoje +8,85%. Posicione-se antes da volatilidade entre os turnos.</div>
       </div>
     </div>
-    <div class="alert-item a-green" onclick="openModal('B3SA3','lucro')">
+    <div class="alert-item a-blue" onclick="openModal('B3SA3','lucro')">
       <div class="alert-bar"></div>
       <div class="alert-body">
-        <div class="alert-tag">Lucro disponível</div>
-        <div class="alert-title">B3SA3 · +37,93% acumulado</div>
-        <div class="alert-sub">Avalie realizar parcialmente antes do 2º turno para proteger lucro.</div>
+        <div class="alert-tag">50 cotas vendidas ✓</div>
+        <div class="alert-title">B3SA3 · lucro realizado em 50 cotas</div>
+        <div class="alert-sub">Restam 50 cotas. Considere manter posição reduzida e monitorar recuperação.</div>
       </div>
     </div>
     <div class="alert-item a-gold" onclick="openModal('RENT3','oportunidade')">
@@ -1080,12 +1080,12 @@ tr:last-child td { border-bottom: none; }
 
   <div class="sec-lbl">Oportunidades</div>
   <div class="alert-list">
-    <div class="alert-item a-green" onclick="openModal('B3SA3','lucro')">
+    <div class="alert-item a-blue" onclick="openModal('B3SA3','lucro')">
       <div class="alert-bar"></div>
       <div class="alert-body">
-        <div class="alert-tag">Realizar lucro</div>
-        <div class="alert-title">B3SA3 · +37,93% acumulado</div>
-        <div class="alert-sub">Vender 50–100 cotas antes do 2º turno. Toque para análise completa.</div>
+        <div class="alert-tag">Parcialmente vendida ✓</div>
+        <div class="alert-title">B3SA3 · 50 cotas mantidas</div>
+        <div class="alert-sub">Lucro já realizado nas 50 primeiras. Manter restante e aguardar próximo nível.</div>
       </div>
     </div>
     <div class="alert-item a-blue" onclick="openModal('DIRR3','reforcar')">
@@ -1113,7 +1113,7 @@ tr:last-child td { border-bottom: none; }
       <div class="alert-body">
         <div class="alert-tag">Excelente</div>
         <div class="alert-title">WEGE3 · PRIO3 · B3SA3</div>
-        <div class="alert-sub">WEGE3 +6,4% · PRIO3 +20,5% · B3SA3 +37,9%. Toque em WEGE3 para detalhes.</div>
+        <div class="alert-sub">WEGE3 +6,4% · PRIO3 +20,5% · B3SA3 +37,9% (50 cotas mantidas). Toque em WEGE3 para detalhes.</div>
       </div>
     </div>
     <div class="alert-item a-purple" onclick="openModal('TRXF11','carregar')">
@@ -1286,7 +1286,7 @@ tr:last-child td { border-bottom: none; }
     </div>
     <div class="cen-body">
       <div class="cen-row" style="cursor:pointer" onclick="openModal('BBAS3','eleitoral')"><span class="cen-row-lbl">BBAS3 (100 cotas)</span><span class="cen-row-val c-green">+15% → +R$3.990</span></div>
-      <div class="cen-row" style="cursor:pointer" onclick="openModal('B3SA3','lucro')"><span class="cen-row-lbl">B3SA3 (100 cotas)</span><span class="cen-row-val c-green">+12% → +R$6.990</span></div>
+      <div class="cen-row" style="cursor:pointer" onclick="openModal('B3SA3','lucro')"><span class="cen-row-lbl">B3SA3 (50 cotas)</span><span class="cen-row-val c-green">+12% → +R$3.495</span></div>
       <div class="cen-row" style="cursor:pointer" onclick="openModal('WEGE3','eleitoral')"><span class="cen-row-lbl">WEGE3 (70 cotas)</span><span class="cen-row-val c-green">+8% → +R$2.660</span></div>
       <div class="cen-row" style="cursor:pointer" onclick="openModal('ITUB4','eleitoral')"><span class="cen-row-lbl">ITUB4 (20 cotas)</span><span class="cen-row-val c-green">+10% → +R$848</span></div>
       <div class="cen-row" style="cursor:pointer" onclick="openModal('PETR4','eleitoral')"><span class="cen-row-lbl">PETR4 (80 cotas)</span><span class="cen-row-val" style="color:var(--fg3)">Neutro</span></div>
@@ -1418,7 +1418,7 @@ tr:last-child td { border-bottom: none; }
 const BRAPI_TOKEN = 'bn4FGjh6jDfKiR1owyDtuh';
 var portfolio = [
   // AÇÕES
-  {ticker:'B3SA3',  tipo:'acoes', qtd:100, pm:16.89, cot:22.55, acao:'lucro'},
+  {ticker:'B3SA3',  tipo:'acoes', qtd:50,  pm:16.89, cot:22.55, acao:'manter'},
   {ticker:'BBAS3',  tipo:'acoes', qtd:100, pm:26.67, cot:24.78, acao:'monitorar-venda'},
   {ticker:'CSMG3',  tipo:'acoes', qtd:30,  pm:57.40, cot:61.84, acao:'manter'},
   {ticker:'DIRR3',  tipo:'acoes', qtd:300, pm:11.42, cot:11.57, acao:'manter'},
@@ -1549,7 +1549,7 @@ async function fetchQuotes(){
 var liquidez=[
   {ticker:'Reserva NU', nivel:'alta',  prazo:'D+0',        pct:'25,3%'},
   {ticker:'PETR4',      nivel:'alta',  prazo:'D+2',        pct:'8,2%'},
-  {ticker:'B3SA3',      nivel:'alta',  prazo:'D+2',        pct:'19,3%'},
+  {ticker:'B3SA3',      nivel:'alta',  prazo:'D+2',        pct:'9,7%'},
   {ticker:'VALE3',      nivel:'alta',  prazo:'D+2',        pct:'6,5%'},
   {ticker:'ITUB4',      nivel:'alta',  prazo:'D+2',        pct:'2,8%'},
   {ticker:'WEGE3',      nivel:'alta',  prazo:'D+2',        pct:'11,6%'},
