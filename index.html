@@ -1245,29 +1245,27 @@ tr:last-child td { border-bottom: none; }
 
 <script>
 const BRAPI_TOKEN = 'bn4FGjh6jDfKiR1owyDtuh';
-const portfolio = [
+var portfolio = [
   // AÇÕES
-  {ticker:'B3SA3',    tipo:'acoes', qtd:100, pm:16.89, cot:23.29, acao:'manter'},
-  {ticker:'PETR4',    tipo:'acoes', qtd:80,  pm:41.97, cot:49.17, acao:'manter'},
-  {ticker:'PRIO3',    tipo:'acoes', qtd:20,  pm:53.43, cot:64.36, acao:'manter'},
-  {ticker:'WEGE3',    tipo:'acoes', qtd:70,  pm:50.35, cot:50.00, acao:'manter'},
-  {ticker:'RDOR3',    tipo:'acoes', qtd:100, pm:25.00, cot:27.00, acao:'manter'},
-  {ticker:'BBAS3',    tipo:'acoes', qtd:100, pm:26.67, cot:26.44, acao:'monitorar-venda'},
-  {ticker:'VALE3',    tipo:'acoes', qtd:65,  pm:74.17, cot:78.20, acao:'monitorar-venda'},
-  {ticker:'ITUB4',    tipo:'acoes', qtd:20,  pm:42.24, cot:49.48, acao:'manter'},
-  {ticker:'CSMG3',    tipo:'acoes', qtd:30,  pm:57.40, cot:61.03, acao:'manter'},
-  {ticker:'EGIE3',    tipo:'acoes', qtd:30,  pm:32.78, cot:31.64, acao:'manter'},
-  {ticker:'DIRR3',    tipo:'acoes', qtd:300, pm:11.42, cot:11.35, acao:'manter'},
-  {ticker:'SMFT3',    tipo:'acoes', qtd:45,  pm:18.61, cot:17.77, acao:'manter'},
-  {ticker:'PLPL3',    tipo:'acoes', qtd:300, pm:8.33,  cot:7.20,  acao:'monitorar-venda'},
-  {ticker:'TTEN3',    tipo:'acoes', qtd:80,  pm:14.39, cot:11.69, acao:'manter'},
-  {ticker:'CSAN3',    tipo:'acoes', qtd:200, pm:5.49,  cot:3.83,  acao:'monitorar-venda'},
+  {ticker:'B3SA3',  tipo:'acoes', qtd:100, pm:16.89, cot:22.55, acao:'lucro'},
+  {ticker:'BBAS3',  tipo:'acoes', qtd:100, pm:26.67, cot:24.78, acao:'monitorar-venda'},
+  {ticker:'CSMG3',  tipo:'acoes', qtd:30,  pm:57.40, cot:61.84, acao:'manter'},
+  {ticker:'CSAN3',  tipo:'acoes', qtd:200, pm:5.49,  cot:3.83,  acao:'monitorar-venda'},
+  {ticker:'DIRR3',  tipo:'acoes', qtd:300, pm:11.42, cot:11.57, acao:'manter'},
+  {ticker:'EGIE3',  tipo:'acoes', qtd:30,  pm:32.78, cot:31.45, acao:'manter'},
+  {ticker:'ITUB4',  tipo:'acoes', qtd:20,  pm:42.24, cot:50.37, acao:'lucro'},
+  {ticker:'PETR4',  tipo:'acoes', qtd:80,  pm:41.97, cot:54.02, acao:'lucro'},
+  {ticker:'PLPL3',  tipo:'acoes', qtd:300, pm:8.33,  cot:8.39,  acao:'monitorar-venda'},
+  {ticker:'PRIO3',  tipo:'acoes', qtd:20,  pm:53.43, cot:62.80, acao:'lucro'},
+  {ticker:'RDOR3',  tipo:'acoes', qtd:100, pm:38.43, cot:44.73, acao:'lucro'},
+  {ticker:'SMFT3',  tipo:'acoes', qtd:45,  pm:18.61, cot:21.28, acao:'lucro'},
+  {ticker:'TTEN3',  tipo:'acoes', qtd:80,  pm:14.39, cot:11.65, acao:'aguardar'},
+  {ticker:'VALE3',  tipo:'acoes', qtd:65,  pm:73.84, cot:70.28, acao:'monitorar-venda'},
+  {ticker:'WEGE3',  tipo:'acoes', qtd:70,  pm:50.34, cot:50.99, acao:'manter'},
   // FIIs
-  {ticker:'GARE11',   tipo:'fiis',  qtd:100, pm:8.38,  cot:8.46,  acao:'manter'},
-  {ticker:'IRIM11',   tipo:'fiis',  qtd:58,  pm:67.90, cot:63.40, acao:'manter'},
-  {ticker:'TRXF11',   tipo:'fiis',  qtd:15,  pm:91.90, cot:70.42, acao:'manter'},
-  // RENDA FIXA
-  {ticker:'LCA Out/27',tipo:'rf',   qtd:1,   pm:2999.55, cot:2999.55, acao:'manter'},
+  {ticker:'GARE11', tipo:'fiis',  qtd:100, pm:8.38,  cot:8.68,  acao:'manter'},
+  {ticker:'IRIM11', tipo:'fiis',  qtd:58,  pm:67.90,  cot:64.87, acao:'manter'},
+  {ticker:'TRXF11', tipo:'fiis',  qtd:15,  pm:91.90,  cot:71.17, acao:'aguardar'},
 ];
 
 const bCls = {manter:'b-manter',comprar:'b-comprar',vender:'b-vender',reforcar:'b-reforcar',aguardar:'b-aguardar'};
@@ -1312,10 +1310,10 @@ function updateTotals(){
   el.style.color=res>=0?'var(--green)':'var(--red)';
 }
 
-const NUBANK_CONTA   = 4208.22;
-const NUBANK_INVEST  = 139611.19;
-const NUBANK_TOTAL   = NUBANK_CONTA + NUBANK_INVEST; // 143.819,41
-const FUNDO_EXTERNO  = 35000;    // fundo externo · rende R$1.400/mês
+const NUBANK_CONTA   = 4208.45;  // saldo disponível conta corrente
+const NUBANK_INVEST  = 0;        // investimentos Nubank não-B3 (desconhecido — remover para não duplicar)
+const NUBANK_TOTAL   = NUBANK_CONTA;
+const FUNDO_EXTERNO  = 0;        // remover até confirmar com usuária
 
 function updatePatrimonio(){
   const totalB3 = portfolio.filter(a=>a.tipo!=='rf').reduce((s,a)=>s+a.cot*a.qtd,0);
@@ -1490,7 +1488,7 @@ var companyData = {
     riscos:['Preço do minério caiu de US$140 para US$90–100/t','Desaceleração da construção civil na China','Dívida com Samarco (Mariana)'],
     acoes:{
       manter:'Você tem 65 cotas com PM R$74,17, cotação ~R$78,20 (+5,4%). Minério de ferro estabilizando. Manter exposição — China sinalizando novos estímulos à construção.',
-      'monitorar-venda':'<strong>🔔 ATENÇÃO: VALE3 JÁ SUPEROU O PM!</strong> PM R$74,17 · cotação R$78,20 (+5,4%). Você está no lucro! Posição com 65 cotas acumula +R$261,95 de ganho. <strong>Hora de vender!</strong> Execute a ordem de venda agora para realizar o lucro e realocar o capital.'
+      'monitorar-venda':'<strong>🎯 Estratégia: aguardar breakeven.</strong> PM R$73,84 · cotação atual R$70,28 (−4,8%). Faltam R$3,56/cota para o ponto de saída. Com 65 cotas, o breakeven total é R$4.799,60. O robô vai alertar assim que a cotação atingir R$73,84.'
     }
   },
   ITUB4:  { name:'Itaú Unibanco PN', sector:'Bancos / Financeiro', setor:'Financeiro / Bancos', subsetor:'Banco Privado',tipo:'acoes',
@@ -1542,7 +1540,7 @@ var companyData = {
     acoes:{
       aguardar:'PM R$8,33, cotação ~R$7,20 (−13,6%). Posição abaixo do PM. Sem catalisador claro no curto prazo — nova descoberta ou resultado trimestral forte pode reverter. <strong>Não vender agora</strong>: realizar prejuízo aqui travaria a perda. Aguardar próximo resultado (3T26) antes de decidir.',
       manter:'Empresa sólida com geração de caixa positiva. Manter enquanto fundamentos do setor sustentarem. Acompanhar preço do Brent.',
-      'monitorar-venda':'<strong>🎯 Estratégia: aguardar breakeven.</strong> PM R$8,33 · cotação R$7,20 (−13,6%). Faltam R$1,13/cota para o ponto de saída. Com 300 cotas, o breakeven total é R$2.499. O robô vai alertar assim que a cotação atingir R$8,33. <strong>Não vender antes disso</strong>. Gatilho esperado: resultado 3T26 ou valorização do Brent acima de US$85.'
+      'monitorar-venda':'<strong>🔔 ATENÇÃO: PLPL3 JÁ SUPEROU O PM!</strong> PM R$8,33 · cotação R$8,39 (+0,7%). Você está no lucro! Considere realizar o lucro agora ou colocar stop na faixa de R$8,33.'
     }
   },
   TTEN3:  { name:'3tentos', sector:'Agronegócio / Beneficiamento', setor:'Agronegócio', subsetor:'Insumos, Beneficiamento e Originação',tipo:'acoes',
