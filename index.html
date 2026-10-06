@@ -961,12 +961,13 @@ tr:last-child td { border-bottom: none; }
         <div class="alert-sub">Ibovespa bateu recorde hoje +8,85%. Posicione-se antes da volatilidade entre os turnos.</div>
       </div>
     </div>
-    <div class="alert-item a-blue" onclick="openModal('B3SA3','lucro')">
+    <!-- ALERTA DINÂMICO B3SA3 -->
+    <div id="b3sa3-alert-card" class="alert-item a-blue" onclick="openModal('B3SA3','lucro')">
       <div class="alert-bar"></div>
       <div class="alert-body">
-        <div class="alert-tag">50 cotas vendidas ✓</div>
-        <div class="alert-title">B3SA3 · lucro realizado em 50 cotas</div>
-        <div class="alert-sub">Restam 50 cotas. Considere manter posição reduzida e monitorar recuperação.</div>
+        <div class="alert-tag">50 cotas mantidas · carregando...</div>
+        <div class="alert-title">B3SA3 · aguardando cotação</div>
+        <div class="alert-sub">Buscando preço atual e máxima dos últimos 5 dias...</div>
       </div>
     </div>
     <div class="alert-item a-gold" onclick="openModal('RENT3','oportunidade')">
@@ -1584,10 +1585,73 @@ async function fetchQuotes(){
       `Tempo real · ${now.getHours().toString().padStart(2,'0')}h${now.getMinutes().toString().padStart(2,'0')}`;
     buildTable(curFilter);
     updatePatrimonio();
+    fetchB3SA3History();
   }catch(e){
     document.getElementById('cot-status').textContent='Offline — usando último preço conhecido';
     updatePatrimonio();
+    updateB3SA3AlertCard(null, null);
   }
+}
+
+async function fetchB3SA3History(){
+  const card = document.getElementById('b3sa3-alert-card');
+  if(!card) return;
+  const b3item = portfolio.find(a=>a.ticker==='B3SA3');
+  const cotAtual = b3item ? b3item.cot : null;
+  try{
+    // Busca histórico de 5 dias com intervalo diário
+    const r = await fetch(`https://brapi.dev/api/quote/B3SA3?range=5d&interval=1d&token=${BRAPI_TOKEN}`);
+    if(!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const hist = (d.results||[])[0]?.historicalDataPrice || [];
+    const highs = hist.map(h=>h.high).filter(Boolean);
+    const max5d = highs.length ? Math.max(...highs) : null;
+    updateB3SA3AlertCard(cotAtual, max5d);
+  }catch(e){
+    updateB3SA3AlertCard(cotAtual, null);
+  }
+}
+
+function updateB3SA3AlertCard(cot, max5d){
+  const card = document.getElementById('b3sa3-alert-card');
+  if(!card) return;
+  const PM = 16.89;
+  const qtd = 50;
+  const lucroTotal = cot ? ((cot - PM) * qtd) : null;
+  const lucroStr = lucroTotal !== null ? `R$${lucroTotal.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` : '–';
+  const pctPM = cot ? ((cot - PM) / PM * 100) : null;
+  const pctStr = pctPM !== null ? `${pctPM>=0?'+':''}${pctPM.toFixed(1)}%` : '';
+
+  // Verifica se está na máxima de 5 dias (dentro de 1%)
+  const naMaxima = max5d && cot && ((max5d - cot) / max5d) < 0.01;
+  const distMaxima = max5d && cot ? ((max5d - cot) / max5d * 100) : null;
+
+  let classe, tagTxt, titulo, sub;
+
+  if(naMaxima){
+    // 🔔 ALERTA VENDA — cotação batendo máxima 5 dias
+    classe = 'a-green';
+    tagTxt = '🔔 MÁXIMA 5 DIAS — AVALIAR VENDA';
+    titulo = `B3SA3 · R$${cot?.toFixed(2)} — pico dos últimos 5 dias!`;
+    sub = `Máxima 5D: R$${max5d?.toFixed(2)} · Você está ${pctStr} vs PM · Lucro nas 50 cotas: ${lucroStr}. Momento de avaliar nova realização!`;
+  } else if(cot && max5d){
+    const faltaPct = distMaxima?.toFixed(1);
+    classe = 'a-blue';
+    tagTxt = '50 cotas mantidas · monitorando';
+    titulo = `B3SA3 · R$${cot?.toFixed(2)} (${pctStr} vs PM)`;
+    sub = `Máxima 5 dias: R$${max5d?.toFixed(2)} · falta ${faltaPct}% para bater o pico · Lucro atual: ${lucroStr}`;
+  } else {
+    classe = 'a-blue';
+    tagTxt = '50 cotas mantidas ✓';
+    titulo = cot ? `B3SA3 · R$${cot?.toFixed(2)} (${pctStr} vs PM)` : 'B3SA3 · carregando cotação...';
+    sub = `Lucro atual: ${lucroStr} · aguardando histórico 5 dias`;
+  }
+
+  // Atualiza classe do card
+  card.className = `alert-item ${classe}`;
+  card.querySelector('.alert-tag').textContent = tagTxt;
+  card.querySelector('.alert-title').textContent = titulo;
+  card.querySelector('.alert-sub').textContent = sub;
 }
 
 var liquidez=[
