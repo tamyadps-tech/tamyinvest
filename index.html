@@ -775,18 +775,18 @@ tr:last-child td { border-bottom: none; }
     </div>
     <div class="stat-card">
       <div class="stat-lbl">Nubank Invest</div>
-      <div class="stat-val">R$&nbsp;139.611</div>
-      <div class="stat-sub">Carteira + Caixinhas · 99,2% CDI</div>
+      <div class="stat-val">R$&nbsp;6.003</div>
+      <div class="stat-sub">RF + Tesouro + Fundos · 99,2% CDI</div>
     </div>
     <div class="stat-card">
       <div class="stat-lbl">Melhor hoje</div>
-      <div class="stat-val c-green">B3SA3</div>
-      <div class="stat-sub c-green">+37,93% vs PM</div>
+      <div class="stat-val c-green" id="stat-melhor">—</div>
+      <div class="stat-sub c-green" id="stat-melhor-sub">carregando…</div>
     </div>
     <div class="stat-card">
       <div class="stat-lbl">Atenção</div>
-      <div class="stat-val c-red">CSAN3</div>
-      <div class="stat-sub c-red">−30,2% vs PM</div>
+      <div class="stat-val c-red" id="stat-atencao">—</div>
+      <div class="stat-sub c-red" id="stat-atencao-sub">carregando…</div>
     </div>
   </div>
 
@@ -819,7 +819,7 @@ tr:last-child td { border-bottom: none; }
       </div>
     </div>
     <div class="insight">
-      <strong>Recomendação ·</strong> Tesouro IPCA+ elevaria segurança para 80+. Prioridade: reduzir CSAN3 e alocar 10% em ativos internacionais.
+      <strong>Recomendação ·</strong> Tesouro IPCA+ elevaria segurança para 80+. Prioridade: reduzir exposição a TTEN3/TRXF11 e alocar 10% em ativos internacionais.
     </div>
   </div>
 
@@ -1324,6 +1324,24 @@ function updatePatrimonio(){
   const patEl = document.getElementById('pat-val');
   if(b3El) b3El.textContent = 'R$ '+(totalB3).toLocaleString('pt-BR',{maximumFractionDigits:0});
   if(patEl) patEl.textContent = (total).toLocaleString('pt-BR',{maximumFractionDigits:0});
+
+  // Atualiza cards Melhor/Atenção com base nos dados atuais
+  const ativos = portfolio.filter(a=>a.tipo!=='rf' && a.pm>0);
+  if(ativos.length){
+    const comVar = ativos.map(a=>({ticker:a.ticker, pct:((a.cot-a.pm)/a.pm)*100}));
+    comVar.sort((a,b)=>b.pct-a.pct);
+    const melhor = comVar[0];
+    const pior   = comVar[comVar.length-1];
+    const melhorEl   = document.getElementById('stat-melhor');
+    const melhorSub  = document.getElementById('stat-melhor-sub');
+    const atencaoEl  = document.getElementById('stat-atencao');
+    const atencaoSub = document.getElementById('stat-atencao-sub');
+    const fmt1 = v => (v>=0?'+':'')+v.toFixed(1)+'%';
+    if(melhorEl)  melhorEl.textContent  = melhor.ticker;
+    if(melhorSub) melhorSub.textContent = fmt1(melhor.pct)+' vs PM';
+    if(atencaoEl)  atencaoEl.textContent  = pior.ticker;
+    if(atencaoSub) atencaoSub.textContent = fmt1(pior.pct)+' vs PM';
+  }
 }
 
 async function fetchQuotes(){
