@@ -1349,7 +1349,7 @@ async function fetchQuotes(){
   }
 }
 
-const liquidez=[
+var liquidez=[
   {ticker:'Reserva NU', nivel:'alta',  prazo:'D+0',        pct:'25,3%'},
   {ticker:'PETR4',      nivel:'alta',  prazo:'D+2',        pct:'8,2%'},
   {ticker:'B3SA3',      nivel:'alta',  prazo:'D+2',        pct:'19,3%'},
@@ -1367,12 +1367,12 @@ const liquidez=[
   {ticker:'TRXF11',     nivel:'baixa', prazo:'D+3',        pct:'3,6%'},
   {ticker:'LCI Orig.',  nivel:'baixa', prazo:'Vencimento', pct:'5,1%'},
 ];
-const liqColor={alta:'var(--green)',media:'var(--gold2)',baixa:'var(--red)'};
+var liqColor={alta:'var(--green)',media:'var(--gold2)',baixa:'var(--red)'};
 
 function buildLiquidez(){
   document.getElementById('liq-list').innerHTML=liquidez.map(l=>{
     const tk=l.ticker.replace(/\s.*$/,''); // strip suffix like " Orig."
-    const clickable=companyData[tk]?`onclick="openModal('${tk}','manter')" style="cursor:pointer"`:'';
+    const clickable=(companyData&&companyData[tk])?`onclick="openModal('${tk}','manter')" style="cursor:pointer"`:'';
     return`<div class="liq-row" ${clickable}>
       <div class="liq-dot" style="background:${liqColor[l.nivel]}"></div>
       <div class="liq-name">${l.ticker}</div>
@@ -1429,7 +1429,7 @@ function toggleTheme(){
 // MODAL — dados de empresa + justificativa
 // ──────────────────────────────────────────────
 
-const companyData = {
+var companyData = {
   B3SA3:  { name:'B3 S.A.', sector:'Bolsa de Valores · Infraestrutura', setor:'Bolsa/Infra Financeira', subsetor:'Serviços Financeiros', tipo:'acoes',
     desc:'Única bolsa de valores do Brasil. Lucro recorrente, margens acima de 40%. Alta correlação com o volume negociado no mercado.',
     pontos:['Monopólio regulado — sem concorrência direta','Margens EBITDA acima de 60%','Dividendos consistentes (payout ~80%)'],
@@ -1592,7 +1592,7 @@ const companyData = {
   },
 };
 
-const alertaJustificativas = {
+var alertaJustificativas = {
   venda:       { cor:'var(--red)',    tag:'Recomendação de Venda', label:'venda' },
   monitorar:   { cor:'var(--gold2)', tag:'Monitorar', label:'monitorar' },
   lucro:       { cor:'var(--green)',  tag:'Realizar Lucro', label:'lucro' },
@@ -1709,7 +1709,7 @@ function closeModalBtn(){
 // ──────────────────────────────────────────────
 // CAIXINHAS ANALYSIS
 // ──────────────────────────────────────────────
-const caixinhas = [
+var caixinhas = [
   { nome:'Reserva de Emergência', valor:52548.16, rendimento:3114.55, tipo:'emergencia',
     alerta:'✅ Saudável — 99,2% CDI é ótimo para reserva. Manter. Ideal manter 6×despesas mensais.',
     conselho:'Em queda de juros (Selic < 10%), considere migrar parte para IPCA+ garantindo retorno real.' },
@@ -1726,7 +1726,7 @@ const caixinhas = [
     alerta:'✈️ Sem saldo registrado. Defina meta e prazo para começar a poupar.',
     conselho:'Para viagem em 2026–2027, CDI com liquidez diária é ideal. Comece com R$200–500/mês.' },
 ];
-const caixTipo = { emergencia:'var(--green)', objetivo:'var(--blue)', especial:'var(--gold2)', garantia:'var(--fg3)' };
+var caixTipo = { emergencia:'var(--green)', objetivo:'var(--blue)', especial:'var(--gold2)', garantia:'var(--fg3)' };
 
 function buildCaixinhasHtml(){
   const cdiFmt = v => v>0 ? `+R$${v.toLocaleString('pt-BR',{minimumFractionDigits:2})}` : '—';
