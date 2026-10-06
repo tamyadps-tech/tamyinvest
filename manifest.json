@@ -4,8 +4,8 @@
   "description": "Monitor da carteira de investimentos",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0f14",
-  "theme_color": "#0d0f14",
+  "background_color": "#eef1f6",
+  "theme_color": "#1dc893",
   "orientation": "portrait",
   "icons": [
     {
