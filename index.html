@@ -756,12 +756,12 @@ tr:last-child td { border-bottom: none; }
       <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="2,10 7,4 12,10"/>
       </svg>
-      <span id="pat-change">Atualizado hoje · Nubank + B3 + RF</span>
+      <span id="pat-change">Atualizado 06/10/2026 · Nubank + B3 + XP + Ext</span>
     </div>
     <div class="hero-pills">
-      <div class="pill"><div class="pill-lbl">Nubank</div><div class="pill-val">R$&nbsp;143.819</div></div>
-      <div class="pill"><div class="pill-lbl">B3</div><div class="pill-val" id="pill-b3">calculando…</div></div>
-      <div class="pill"><div class="pill-lbl">RF</div><div class="pill-val">R$&nbsp;2.999</div></div>
+      <div class="pill"><div class="pill-lbl">Nubank</div><div class="pill-val">R$&nbsp;6.003</div></div>
+      <div class="pill"><div class="pill-lbl">B3 Nubank</div><div class="pill-val" id="pill-b3">calculando…</div></div>
+      <div class="pill"><div class="pill-lbl">Fundos XP</div><div class="pill-val">R$&nbsp;3.791</div></div>
       <div class="pill"><div class="pill-lbl">Ext · R$1.4k/mês</div><div class="pill-val">R$&nbsp;35.000</div></div>
     </div>
   </div>
@@ -1309,15 +1309,16 @@ function updateTotals(){
   el.style.color=res>=0?'var(--green)':'var(--red)';
 }
 
-const NUBANK_CONTA   = 4208.45;  // saldo disponível conta corrente
-const NUBANK_INVEST  = 0;        // investimentos Nubank não-B3 (desconhecido — remover para não duplicar)
-const NUBANK_TOTAL   = NUBANK_CONTA;
-const FUNDO_EXTERNO  = 0;        // remover até confirmar com usuária
+const NUBANK_CONTA   = 4208.45;   // conta corrente
+const NUBANK_INVEST  = 6003.41;   // RF + Tesouro + Fundos Nubank (excluindo B3)
+const NUBANK_TOTAL   = NUBANK_CONTA + NUBANK_INVEST;
+const FUNDOS_XP      = 3791.36;   // 4 fundos XP
+const FUNDO_EXTERNO  = 35000;     // rende R$1.400/mês
 
 function updatePatrimonio(){
   const totalB3 = portfolio.filter(a=>a.tipo!=='rf').reduce((s,a)=>s+a.cot*a.qtd,0);
   const totalRF = portfolio.filter(a=>a.tipo==='rf').reduce((s,a)=>s+a.pm*a.qtd,0);
-  const total   = NUBANK_TOTAL + FUNDO_EXTERNO + totalB3 + totalRF;
+  const total   = NUBANK_TOTAL + FUNDO_EXTERNO + FUNDOS_XP + totalB3 + totalRF;
   const fmtK = v => v>=1000?'R$ '+(v/1).toLocaleString('pt-BR',{maximumFractionDigits:0}):fmt(v);
   const b3El = document.getElementById('pill-b3');
   const patEl = document.getElementById('pat-val');
