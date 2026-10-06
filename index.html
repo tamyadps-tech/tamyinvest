@@ -875,6 +875,18 @@ tr:last-child td { border-bottom: none; }
     </div>
   </div>
 
+  <!-- ALERTA B3SA3 em destaque — logo após o grid de stats -->
+  <div style="padding:0 16px 8px;">
+    <div id="b3sa3-alert-card" class="alert-item a-blue" onclick="openModal('B3SA3','lucro')" style="cursor:pointer;margin:0;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">B3SA3 · carregando...</div>
+        <div class="alert-title">Aguardando cotação e máxima 5D</div>
+        <div class="alert-sub">Buscando dados em tempo real...</div>
+      </div>
+    </div>
+  </div>
+
   <!-- SCORE -->
   <div class="sec-lbl">Score da Carteira</div>
   <div class="score-wrap">
@@ -959,15 +971,6 @@ tr:last-child td { border-bottom: none; }
         <div class="alert-tag">2º Turno · 25 out</div>
         <div class="alert-title">Flávio 47,03% × Lula 45,16%</div>
         <div class="alert-sub">Ibovespa bateu recorde hoje +8,85%. Posicione-se antes da volatilidade entre os turnos.</div>
-      </div>
-    </div>
-    <!-- ALERTA DINÂMICO B3SA3 -->
-    <div id="b3sa3-alert-card" class="alert-item a-blue" onclick="openModal('B3SA3','lucro')">
-      <div class="alert-bar"></div>
-      <div class="alert-body">
-        <div class="alert-tag">50 cotas mantidas · carregando...</div>
-        <div class="alert-title">B3SA3 · aguardando cotação</div>
-        <div class="alert-sub">Buscando preço atual e máxima dos últimos 5 dias...</div>
       </div>
     </div>
     <div class="alert-item a-gold" onclick="openModal('RENT3','oportunidade')">
