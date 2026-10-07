@@ -1,5 +1,5 @@
 // TamyInvest Service Worker — notificações push em background
-const CACHE = 'tamyinvest-v5';
+const CACHE = 'tamyinvest-v6';
 const BRAPI_TOKEN = 'bn4FGjh6jDfKiR1owyDtuh';
 const B3SA3_URL = `https://brapi.dev/api/quote/B3SA3?range=5d&interval=1d&token=${BRAPI_TOKEN}`;
 const QUOTE_URL = `https://brapi.dev/api/quote/B3SA3?token=${BRAPI_TOKEN}`;
@@ -10,7 +10,25 @@ self.addEventListener('install', e => {
 });
 
 self.addEventListener('activate', e => {
-  e.waitUntil(clients.claim());
+  // Remove caches antigas
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    ).then(() => clients.claim())
+  );
+});
+
+// index.html sempre da rede (nunca cacheado — garante atualizações)
+self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
+  // Não intercepta chamadas externas (BRAPI, fontes, etc.)
+  if(url.origin !== self.location.origin) return;
+  // index.html sempre network-first
+  if(url.pathname === '/' || url.pathname === '/index.html'){
+    e.respondWith(fetch(e.request, {cache:'no-store'}).catch(() => caches.match(e.request)));
+    return;
+  }
+  // Outros assets (sw.js, manifest, icons) — cache normal
 });
 
 // Escuta mensagens da página principal

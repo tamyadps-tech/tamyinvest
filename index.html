@@ -2068,34 +2068,21 @@ document.addEventListener('DOMContentLoaded', function(){
   buildRobo(); // renderiza imediatamente com PM como fallback
   solicitarNotificacao();
   fetchQuotes();
-  // Registra Service Worker — desregistra versões antigas primeiro
+  // Service Worker — registra normalmente (sw.js tem versão única que invalida cache)
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.getRegistrations().then(function(regs){
-      var unregPromises = regs.map(function(r){ return r.unregister(); });
-      return Promise.all(unregPromises);
-    }).then(function(){
-      // Limpa todos os caches antigos
-      if('caches' in window){
-        return caches.keys().then(function(keys){
-          return Promise.all(keys.map(function(k){ return caches.delete(k); }));
-        });
-      }
-    }).then(function(){
-      return navigator.serviceWorker.register('/sw.js');
-    }).then(function(reg){
-      if(reg.periodicSync){
-        reg.periodicSync.register('verificar-b3sa3', { minInterval: 5 * 60 * 1000 }).catch(function(){});
-      }
-      navigator.serviceWorker.ready.then(function(r){
-        if(r.active) r.active.postMessage({type:'AGENDAR_VERIFICACAO'});
-      });
+    navigator.serviceWorker.register('/sw.js').then(function(reg){
+      // Força verificação de atualização imediata
+      reg.update();
     }).catch(function(){});
   }
 
+  // Atualiza cotações a cada 5 min durante horário de pregão (10h–17h BRT)
   setInterval(function(){
-    var now=new Date(), m=now.getHours()*60+now.getMinutes();
-    if(m>=600&&m<=1020) fetchQuotes();
+    var now=new Date(), h=now.getHours(), m=now.getMinutes(), total=h*60+m;
+    if(total>=600&&total<=1020) fetchQuotes();
   },5*60*1000);
+  // Busca imediata também fora do pregão para atualizar última cotação
+  setTimeout(fetchQuotes, 8000);
  })();
 }); // fim DOMContentLoaded
 
