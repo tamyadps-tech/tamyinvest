@@ -1649,6 +1649,19 @@ tr:last-child td { border-bottom: none; }
 </div><!-- /shell -->
 
 <script>
+// Captura erros globais e mostra na tela (diagnóstico iOS)
+window.onerror = function(msg, src, line, col, err){
+  var box = document.getElementById('global-error-box');
+  if(!box){ box = document.createElement('div'); box.id='global-error-box'; box.style.cssText='position:fixed;bottom:80px;left:8px;right:8px;background:#f87171;color:#000;font-size:11px;font-family:monospace;padding:8px 10px;border-radius:8px;z-index:9999;word-break:break-all;max-height:120px;overflow:auto'; document.body && document.body.appendChild(box); }
+  box.textContent = (msg||'') + ' ['+line+':'+col+'] ' + (src||'').split('/').pop();
+  return false;
+};
+window.addEventListener('unhandledrejection', function(e){
+  var box = document.getElementById('global-error-box');
+  if(!box){ box = document.createElement('div'); box.id='global-error-box'; box.style.cssText='position:fixed;bottom:80px;left:8px;right:8px;background:#facc15;color:#000;font-size:11px;font-family:monospace;padding:8px 10px;border-radius:8px;z-index:9999;word-break:break-all;max-height:120px;overflow:auto'; document.body && document.body.appendChild(box); }
+  box.textContent = 'Promise: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason));
+});
+
 const BRAPI_TOKEN = 'bn4FGjh6jDfKiR1owyDtuh';
 var portfolio = [
   // AÇÕES
@@ -2036,7 +2049,8 @@ function toggleTheme(){
   buildTable();
   buildLiquidez();
   updatePatrimonio();
-  solicitarNotificacao(); // pede permissão de push ao abrir
+  buildRobo(); // renderiza imediatamente com PM como fallback
+  solicitarNotificacao();
   fetchQuotes();
   // Registra Service Worker — desregistra versões antigas primeiro
   if('serviceWorker' in navigator){
@@ -2454,13 +2468,17 @@ function sparklineSVG(pts, color){
     +'</svg>';
 }
 
+var _buildRoboTries = 0;
 function buildRobo(){
-  const el = document.getElementById('robo-content');
+  var el = document.getElementById('robo-content');
   if(!el) return;
   if(typeof companyData === 'undefined' || !companyData){
-    setTimeout(buildRobo, 200);
+    _buildRoboTries++;
+    if(_buildRoboTries < 20) setTimeout(buildRobo, 300);
+    else el.innerHTML = '<div style="padding:24px;color:#f87171;font-size:13px">Erro: companyData não carregou.</div>';
     return;
   }
+  _buildRoboTries = 0;
 
   try {
   const analises = portfolio.map(a=>{
