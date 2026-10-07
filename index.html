@@ -1269,7 +1269,7 @@ tr:last-child td { border-bottom: none; }
     </div>
   </div>
   <div class="cot-status" id="cot-status">Buscando cotações em tempo real...</div>
-  <div style="text-align:center;font-size:9px;color:var(--fg3);padding-bottom:4px;opacity:0.5">v291968a · 07/10 05h</div>
+  <div style="text-align:center;font-size:9px;color:var(--fg3);padding-bottom:4px;opacity:0.5">v3b8f291a · 07/10</div>
 </div>
 
 <!-- ══ ALERTAS ══ -->
@@ -1833,7 +1833,7 @@ async function fetchB3SA3History(){
     const d = await r.json();
     const hist = ((d.results||[])[0] && (d.results||[])[0].historicalDataPrice) || [];
     const highs = hist.map(h=>h.high).filter(Boolean);
-    const max5d = highs.length ? Math.max(...highs) : null;
+    const max5d = highs.length ? Math.max.apply(null, highs) : null;
     updateB3SA3AlertCard(cotAtual, max5d);
   }catch(e){
     updateB3SA3AlertCard(cotAtual, null);
@@ -2422,7 +2422,8 @@ function get5d(ticker, pm, cot){
 
 function sparklineSVG(pts, color){
   const W=70, H=28, pad=3;
-  const min=Math.min(...pts), max=Math.max(...pts);
+  var minArr=pts[0],maxArr=pts[0];for(var _i=1;_i<pts.length;_i++){if(pts[_i]<minArr)minArr=pts[_i];if(pts[_i]>maxArr)maxArr=pts[_i];}
+  const min=minArr, max=maxArr;
   const range=max-min||1;
   const xs=pts.map((_,i)=>pad+i*(W-2*pad)/(pts.length-1));
   const ys=pts.map(p=>H-pad-(p-min)/(range)*(H-2*pad));
@@ -2452,11 +2453,11 @@ function buildRobo(){
     const pct = (a.cot - a.pm) / a.pm * 100;
     const rs  = (a.cot - a.pm) * a.qtd;
     const hist5d = get5d(a.ticker, a.pm, a.cot);
-    const max5d  = Math.max(...hist5d);
+    const max5d  = Math.max.apply(null, hist5d);
     const isNear5dHigh = (max5d - a.cot) / max5d < 0.005; // dentro de 0.5% da máxima
     // Sinal de recuperação: estava em queda mas subiu no último período
     const recovering = pct < -5 && hist5d[4] > hist5d[2] && hist5d[4] > hist5d[3];
-    return { ...a, pct, rs, hist5d, max5d, isNear5dHigh, recovering };
+    return Object.assign({}, a, { pct: pct, rs: rs, hist5d: hist5d, max5d: max5d, isNear5dHigh: isNear5dHigh, recovering: recovering });
   });
 
   const emAlta      = analises.filter(a=>a.pct>=10).sort((a,b)=>b.pct-a.pct);
@@ -2726,7 +2727,7 @@ function buildRobo(){
   }
   el.innerHTML = html;
   } catch(err) {
-    el.innerHTML = `<div style="text-align:left;padding:20px 16px;color:var(--red);font-size:12px;word-break:break-all"><strong>Erro:</strong> ${err.message}<br><br><strong>Stack:</strong><br>${(err.stack||'').replace(/\n/g,'<br>')}<br><br><strong>companyData:</strong> ${typeof companyData}<br><strong>portfolio:</strong> ${typeof portfolio} len=${Array.isArray(portfolio)?portfolio.length:'N/A'}</div>`;
+    el.innerHTML = '<div style="text-align:center;padding:32px 16px;color:var(--fg3);font-size:13px"><div style="font-size:28px;margin-bottom:12px">🤖</div><div style="font-weight:600;color:var(--fg2);margin-bottom:8px">O Robô Analista está atualizando</div><div>Tente recarregar o app. Se o problema persistir, abra pelo navegador.</div></div>';
     console.error('buildRobo error:', err);
   }
 }
