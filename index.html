@@ -1308,6 +1308,15 @@ tr:last-child td { border-bottom: none; }
         <div class="alert-sub">Buscando dados em tempo real...</div>
       </div>
     </div>
+    <!-- ALERTA DINÂMICO DIRR3 MÁXIMA 2 MESES -->
+    <div id="dirr3-alert-card" class="alert-item a-blue" onclick="openModal('DIRR3','lucro')" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">DIRR3 · carregando...</div>
+        <div class="alert-title">Aguardando cotação e máxima 2 meses</div>
+        <div class="alert-sub">Buscando dados em tempo real...</div>
+      </div>
+    </div>
     <div class="alert-item a-gold" onclick="openModal('BBAS3','monitorar')">
       <div class="alert-bar"></div>
       <div class="alert-body">
@@ -1851,6 +1860,7 @@ async function fetchQuotes(){
   buildTable(curFilter);
   updatePatrimonio();
   fetchB3SA3History();
+  fetchDIRR3History();
   var roboEl = document.getElementById('screen-robo');
   if(roboEl && roboEl.classList.contains('active')) buildRobo();
 }
@@ -1872,6 +1882,64 @@ async function fetchB3SA3History(){
   }catch(e){
     updateB3SA3AlertCard(cotAtual, null);
   }
+}
+
+async function fetchDIRR3History(){
+  const card = document.getElementById('dirr3-alert-card');
+  if(!card) return;
+  const item = portfolio.find(a=>a.ticker==='DIRR3');
+  const cotAtual = item ? item.cot : null;
+  try{
+    const r = await fetch('https://brapi.dev/api/quote/DIRR3?range=2mo&interval=1d&token=' + BRAPI_TOKEN);
+    if(!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const hist = ((d.results||[])[0] && (d.results||[])[0].historicalDataPrice) || [];
+    const highs = hist.map(function(h){ return h.high; }).filter(Boolean);
+    const max2m = highs.length ? Math.max.apply(null, highs) : null;
+    updateDIRR3AlertCard(cotAtual, max2m);
+  }catch(e){
+    updateDIRR3AlertCard(cotAtual, null);
+  }
+}
+
+function updateDIRR3AlertCard(cot, max2m){
+  const card = document.getElementById('dirr3-alert-card');
+  if(!card) return;
+  const PM = 11.42;
+  const qtd = 300;
+  const pctPM = cot ? ((cot - PM) / PM * 100) : null;
+  const pctStr = pctPM !== null ? (pctPM>=0?'+':'') + pctPM.toFixed(1) + '%' : '';
+  const lucroTotal = cot ? ((cot - PM) * qtd) : null;
+  const lucroStr = lucroTotal !== null ? 'R$' + lucroTotal.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '–';
+
+  // Na máxima de 2 meses = dentro de 0,5%
+  const naMaxima = max2m && cot && ((max2m - cot) / max2m) < 0.005;
+  const distPct = max2m && cot ? ((max2m - cot) / max2m * 100) : null;
+
+  var classe, tagTxt, titulo, sub;
+
+  if(naMaxima){
+    classe = 'a-green';
+    tagTxt = '🔔 MÁXIMA 2 MESES — AVALIAR VENDA';
+    titulo = 'DIRR3 · R$' + (cot ? cot.toFixed(2) : '--') + ' — pico dos últimos 2 meses!';
+    sub = 'Máxima 2M: R$' + (max2m ? max2m.toFixed(2) : '--') + ' · ' + pctStr + ' vs PM · Lucro nas 300 cotas: ' + lucroStr + '. Momento de avaliar venda!';
+    dispararNotificacaoPush(
+      '🔔 DIRR3 bateu a máxima de 2 meses!',
+      'Cotação R$' + (cot ? cot.toFixed(2) : '--') + ' · Lucro: ' + lucroStr + ' · Avalie vender agora!'
+    );
+  } else if(cot && max2m){
+    classe = 'a-blue';
+    tagTxt = 'DIRR3 · monitorando máxima 2M';
+    titulo = 'DIRR3 · R$' + cot.toFixed(2) + ' (' + pctStr + ' vs PM)';
+    sub = 'Máxima 2 meses: R$' + max2m.toFixed(2) + ' · falta ' + (distPct ? distPct.toFixed(1) : '--') + '% · Lucro atual: ' + lucroStr;
+  } else {
+    classe = 'a-blue';
+    tagTxt = 'DIRR3 · 300 cotas';
+    titulo = cot ? 'DIRR3 · R$' + cot.toFixed(2) + ' (' + pctStr + ' vs PM)' : 'DIRR3 · carregando cotação...';
+    sub = 'Lucro atual: ' + lucroStr + ' · aguardando histórico 2 meses';
+  }
+
+  _setCardData(card, classe, tagTxt, titulo, sub);
 }
 
 // ── Push Notification ──────────────────────────────────────────────
