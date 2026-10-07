@@ -2315,8 +2315,8 @@ function openModal(ticker, contexto){
     </div>`;
   }
 
-  const pontosHTML = (company.pontos||[]).map(p=>`<li style="margin-bottom:6px;color:var(--fg2);font-size:13px;line-height:1.5">✦ ${p}</li>`).join('');
-  const riscosHTML = (company.riscos||[]).map(r=>`<li style="margin-bottom:6px;color:var(--fg2);font-size:13px;line-height:1.5">⚠ ${r}</li>`).join('');
+  var pontosHTML = (company.pontos||[]).map(function(p){ return '<li style="margin-bottom:6px;color:var(--fg2);font-size:13px;line-height:1.5">❆ '+p+'</li>'; }).join('');
+  var riscosHTML = (company.riscos||[]).map(function(r){ return '<li style="margin-bottom:6px;color:var(--fg2);font-size:13px;line-height:1.5">⚠ '+r+'</li>'; }).join('');
 
   document.getElementById('modal-body').innerHTML = `
     ${kpiBlock}
@@ -2370,17 +2370,20 @@ var caixinhas = [
 var caixTipo = { emergencia:'var(--green)', objetivo:'var(--blue)', especial:'var(--gold2)', garantia:'var(--fg3)' };
 
 function buildCaixinhasHtml(){
-  const cdiFmt = v => v>0 ? `+R$${v.toLocaleString('pt-BR',{minimumFractionDigits:2})}` : '—';
-  return caixinhas.map(c=>`
-    <div class="tend-card" style="cursor:default;margin-bottom:8px">
-      <div class="tend-icon" style="background:${caixTipo[c.tipo]}22;color:${caixTipo[c.tipo]};font-size:18px">🏦</div>
-      <div class="tend-main">
-        <div class="tend-ticker">${c.nome}</div>
-        <div class="tend-desc" style="margin-bottom:4px">${c.valor>0 ? 'R$'+c.valor.toLocaleString('pt-BR',{minimumFractionDigits:2})+' · Rendeu '+cdiFmt(c.rendimento)+' em 12 meses' : 'Sem saldo'}</div>
-        <div class="tend-desc" style="color:var(--fg2)">${c.alerta}</div>
-        <div class="tend-desc" style="color:var(--blue);margin-top:2px">💡 ${c.conselho}</div>
-      </div>
-    </div>`).join('');
+  function cdiFmt(v){ return v>0 ? '+R$'+v.toLocaleString('pt-BR',{minimumFractionDigits:2}) : '—'; }
+  return caixinhas.map(function(c){
+    var bgColor = caixTipo[c.tipo]||'var(--fg3)';
+    var valorStr = c.valor>0 ? 'R$'+c.valor.toLocaleString('pt-BR',{minimumFractionDigits:2})+' · Rendeu '+cdiFmt(c.rendimento)+' em 12 meses' : 'Sem saldo';
+    return '<div class="tend-card" style="cursor:default;margin-bottom:8px">'
+      +'<div class="tend-icon" style="background:'+bgColor+'22;color:'+bgColor+';font-size:18px">🏦</div>'
+      +'<div class="tend-main">'
+      +'<div class="tend-ticker">'+c.nome+'</div>'
+      +'<div class="tend-desc" style="margin-bottom:4px">'+valorStr+'</div>'
+      +'<div class="tend-desc" style="color:var(--fg2)">'+c.alerta+'</div>'
+      +'<div class="tend-desc" style="color:var(--blue);margin-top:2px">💡 '+c.conselho+'</div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
 }
 
 // ──────────────────────────────────────────────
@@ -2415,23 +2418,24 @@ function get5d(ticker, pm, cot){
 }
 
 function sparklineSVG(pts, color){
-  const W=70, H=28, pad=3;
+  var W=70, H=28, pad=3;
   var minArr=pts[0],maxArr=pts[0];for(var _i=1;_i<pts.length;_i++){if(pts[_i]<minArr)minArr=pts[_i];if(pts[_i]>maxArr)maxArr=pts[_i];}
-  const min=minArr, max=maxArr;
-  const range=max-min||1;
-  const xs=pts.map((_,i)=>pad+i*(W-2*pad)/(pts.length-1));
-  const ys=pts.map(p=>H-pad-(p-min)/(range)*(H-2*pad));
-  const d='M'+xs.map((x,i)=>`${x.toFixed(1)},${ys[i].toFixed(1)}`).join('L');
-  const fill=`${d}L${xs[xs.length-1]},${H+2}L${xs[0]},${H+2}Z`;
-  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="flex-shrink:0;overflow:visible">
-    <defs><linearGradient id="sg${Math.random().toString(36).slice(2)}" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="${color}" stop-opacity="0.3"/>
-      <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
-    </linearGradient></defs>
-    <path d="${fill}" fill="${color}" opacity="0.18"/>
-    <path d="${d}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="${xs[xs.length-1]}" cy="${ys[ys.length-1]}" r="2.5" fill="${color}"/>
-  </svg>`;
+  var min=minArr, max=maxArr;
+  var range=max-min||1;
+  var xs=pts.map(function(_,i){ return pad+i*(W-2*pad)/(pts.length-1); });
+  var ys=pts.map(function(p){ return H-pad-(p-min)/(range)*(H-2*pad); });
+  var d='M'+xs.map(function(x,i){ return x.toFixed(1)+','+ys[i].toFixed(1); }).join('L');
+  var fill=d+'L'+xs[xs.length-1]+','+(H+2)+'L'+xs[0]+','+(H+2)+'Z';
+  var gid='sg'+Math.random().toString(36).slice(2);
+  return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" style="flex-shrink:0;overflow:visible">'
+    +'<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1">'
+    +'<stop offset="0%" stop-color="'+color+'" stop-opacity="0.3"/>'
+    +'<stop offset="100%" stop-color="'+color+'" stop-opacity="0"/>'
+    +'</linearGradient></defs>'
+    +'<path d="'+fill+'" fill="'+color+'" opacity="0.18"/>'
+    +'<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
+    +'<circle cx="'+xs[xs.length-1]+'" cy="'+ys[ys.length-1]+'" r="2.5" fill="'+color+'"/>'
+    +'</svg>';
 }
 
 function buildRobo(){
@@ -2722,7 +2726,9 @@ function buildRobo(){
   }
   el.innerHTML = html;
   } catch(err) {
-    el.innerHTML = '<div style="text-align:center;padding:32px 16px;color:var(--fg3);font-size:13px"><div style="font-size:28px;margin-bottom:12px">🤖</div><div style="font-weight:600;color:var(--fg2);margin-bottom:8px">O Robô Analista está atualizando</div><div>Tente recarregar o app. Se o problema persistir, abra pelo navegador.</div></div>';
+    var errMsg = err && err.message ? err.message : String(err);
+    var errStack = err && err.stack ? err.stack.slice(0,300) : '';
+    el.innerHTML = '<div style="text-align:center;padding:32px 16px;font-size:13px"><div style="font-size:28px;margin-bottom:12px">🤖</div><div style="font-weight:700;color:#f87171;margin-bottom:8px">Erro no Robô</div><div style="color:#f87171;font-family:monospace;font-size:11px;text-align:left;background:rgba(248,113,113,.08);border-radius:8px;padding:10px;word-break:break-all">'+errMsg+'<br><br>'+errStack+'</div></div>';
     console.error('buildRobo error:', err);
   }
 }

@@ -1,5 +1,5 @@
 // TamyInvest Service Worker — notificações push em background
-const CACHE = 'tamyinvest-v4';
+const CACHE = 'tamyinvest-v5';
 const BRAPI_TOKEN = 'bn4FGjh6jDfKiR1owyDtuh';
 const B3SA3_URL = `https://brapi.dev/api/quote/B3SA3?range=5d&interval=1d&token=${BRAPI_TOKEN}`;
 const QUOTE_URL = `https://brapi.dev/api/quote/B3SA3?token=${BRAPI_TOKEN}`;
