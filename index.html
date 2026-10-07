@@ -1269,7 +1269,7 @@ tr:last-child td { border-bottom: none; }
     </div>
   </div>
   <div class="cot-status" id="cot-status">Buscando cotações em tempo real...</div>
-  <div style="text-align:center;font-size:9px;color:var(--fg3);padding-bottom:4px;opacity:0.5">v3b8f291a · 07/10</div>
+  <div style="text-align:center;font-size:9px;color:var(--fg3);padding-bottom:4px;opacity:0.5">v6-cache-fix · 07/10</div>
 </div>
 
 <!-- ══ ALERTAS ══ -->
@@ -2038,23 +2038,28 @@ function toggleTheme(){
   updatePatrimonio();
   solicitarNotificacao(); // pede permissão de push ao abrir
   fetchQuotes();
-  // Registra Service Worker para notificações em background
+  // Registra Service Worker — desregistra versões antigas primeiro
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('/sw.js').then(reg => {
-      // Agenda verificação periódica via Periodic Background Sync (Chrome Android)
-      if(reg.periodicSync){
-        reg.periodicSync.register('verificar-b3sa3', { minInterval: 5 * 60 * 1000 })
-          .catch(()=>{});
-      }
-      // Fallback: avisa o SW para rodar o timer interno
-      if(reg.active){
-        reg.active.postMessage({type:'AGENDAR_VERIFICACAO'});
-      } else {
-        navigator.serviceWorker.ready.then(r => {
-          r.active.postMessage({type:'AGENDAR_VERIFICACAO'});
+    navigator.serviceWorker.getRegistrations().then(function(regs){
+      var unregPromises = regs.map(function(r){ return r.unregister(); });
+      return Promise.all(unregPromises);
+    }).then(function(){
+      // Limpa todos os caches antigos
+      if('caches' in window){
+        return caches.keys().then(function(keys){
+          return Promise.all(keys.map(function(k){ return caches.delete(k); }));
         });
       }
-    }).catch(()=>{});
+    }).then(function(){
+      return navigator.serviceWorker.register('/sw.js');
+    }).then(function(reg){
+      if(reg.periodicSync){
+        reg.periodicSync.register('verificar-b3sa3', { minInterval: 5 * 60 * 1000 }).catch(function(){});
+      }
+      navigator.serviceWorker.ready.then(function(r){
+        if(r.active) r.active.postMessage({type:'AGENDAR_VERIFICACAO'});
+      });
+    }).catch(function(){});
   }
 
   setInterval(()=>{
