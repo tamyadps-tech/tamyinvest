@@ -1317,6 +1317,42 @@ tr:last-child td { border-bottom: none; }
         <div class="alert-sub">Buscando dados em tempo real...</div>
       </div>
     </div>
+    <!-- ALERTA DINÂMICO EGIE3 MÁXIMA DO MÊS -->
+    <div id="egie3-alert-card" class="alert-item a-blue" onclick="openModal('EGIE3','manter')" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">EGIE3 · carregando...</div>
+        <div class="alert-title">Aguardando cotação e máxima do mês</div>
+        <div class="alert-sub">Buscando dados em tempo real...</div>
+      </div>
+    </div>
+    <!-- ALERTA DINÂMICO GARE11 MÁXIMA 5 DIAS -->
+    <div id="gare11-alert-card" class="alert-item a-blue" onclick="openModal('GARE11','manter')" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">GARE11 · carregando...</div>
+        <div class="alert-title">Aguardando cotação e máxima 5 dias</div>
+        <div class="alert-sub">Buscando dados em tempo real...</div>
+      </div>
+    </div>
+    <!-- ALERTA DINÂMICO IRIM11 MÁXIMA 5 DIAS -->
+    <div id="irim11-alert-card" class="alert-item a-blue" onclick="openModal('IRIM11','manter')" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">IRIM11 · carregando...</div>
+        <div class="alert-title">Aguardando cotação e máxima 5 dias</div>
+        <div class="alert-sub">Buscando dados em tempo real...</div>
+      </div>
+    </div>
+    <!-- ALERTA DINÂMICO PRIO3 MÁXIMA 5 DIAS -->
+    <div id="prio3-alert-card" class="alert-item a-blue" onclick="openModal('PRIO3','lucro')" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">PRIO3 · carregando...</div>
+        <div class="alert-title">Aguardando cotação e máxima 5 dias</div>
+        <div class="alert-sub">Buscando dados em tempo real...</div>
+      </div>
+    </div>
     <div class="alert-item a-gold" onclick="openModal('BBAS3','monitorar')">
       <div class="alert-bar"></div>
       <div class="alert-body">
@@ -1861,6 +1897,10 @@ async function fetchQuotes(){
   updatePatrimonio();
   fetchB3SA3History();
   fetchDIRR3History();
+  fetchEGIE3History();
+  fetchGARE11History();
+  fetchIRIM11History();
+  fetchPRIO3History();
   var roboEl = document.getElementById('screen-robo');
   if(roboEl && roboEl.classList.contains('active')) buildRobo();
 }
@@ -1939,6 +1979,214 @@ function updateDIRR3AlertCard(cot, max2m){
     sub = 'Lucro atual: ' + lucroStr + ' · aguardando histórico 2 meses';
   }
 
+  _setCardData(card, classe, tagTxt, titulo, sub);
+}
+
+async function fetchEGIE3History(){
+  const card = document.getElementById('egie3-alert-card');
+  if(!card) return;
+  const item = portfolio.find(a=>a.ticker==='EGIE3');
+  const cotAtual = item ? item.cot : null;
+  try{
+    const r = await fetch('https://brapi.dev/api/quote/EGIE3?range=1mo&interval=1d&token=' + BRAPI_TOKEN);
+    if(!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const hist = ((d.results||[])[0] && (d.results||[])[0].historicalDataPrice) || [];
+    const highs = hist.map(function(h){ return h.high; }).filter(Boolean);
+    const max1m = highs.length ? Math.max.apply(null, highs) : null;
+    updateEGIE3AlertCard(cotAtual, max1m);
+  }catch(e){
+    updateEGIE3AlertCard(cotAtual, null);
+  }
+}
+
+function updateEGIE3AlertCard(cot, max1m){
+  const card = document.getElementById('egie3-alert-card');
+  if(!card) return;
+  const PM = 32.78;
+  const qtd = 30;
+  const pctPM = cot ? ((cot - PM) / PM * 100) : null;
+  const pctStr = pctPM !== null ? (pctPM>=0?'+':'') + pctPM.toFixed(1) + '%' : '';
+  const lucroTotal = cot ? ((cot - PM) * qtd) : null;
+  const lucroStr = lucroTotal !== null ? 'R$' + lucroTotal.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '–';
+
+  // Na máxima do mês = dentro de 0,5%
+  const naMaxima = max1m && cot && ((max1m - cot) / max1m) < 0.005;
+  const distPct = max1m && cot ? ((max1m - cot) / max1m * 100) : null;
+
+  var classe, tagTxt, titulo, sub;
+
+  if(naMaxima){
+    classe = 'a-green';
+    tagTxt = '🔔 MÁXIMA DO MÊS — AVALIAR VENDA';
+    titulo = 'EGIE3 · R$' + (cot ? cot.toFixed(2) : '--') + ' — pico do último mês!';
+    sub = 'Máxima 1M: R$' + (max1m ? max1m.toFixed(2) : '--') + ' · ' + pctStr + ' vs PM · Lucro nas 30 cotas: ' + lucroStr + '. Momento de avaliar venda!';
+    dispararNotificacaoPush(
+      '🔔 EGIE3 bateu a máxima do mês!',
+      'Cotação R$' + (cot ? cot.toFixed(2) : '--') + ' · Lucro: ' + lucroStr + ' · Avalie vender agora!'
+    );
+  } else if(cot && max1m){
+    classe = 'a-blue';
+    tagTxt = 'EGIE3 · monitorando máxima 1M';
+    titulo = 'EGIE3 · R$' + cot.toFixed(2) + ' (' + pctStr + ' vs PM)';
+    sub = 'Máxima do mês: R$' + max1m.toFixed(2) + ' · falta ' + (distPct ? distPct.toFixed(1) : '--') + '% · Resultado atual: ' + lucroStr;
+  } else {
+    classe = 'a-blue';
+    tagTxt = 'EGIE3 · 30 cotas';
+    titulo = cot ? 'EGIE3 · R$' + cot.toFixed(2) + ' (' + pctStr + ' vs PM)' : 'EGIE3 · carregando cotação...';
+    sub = 'Resultado atual: ' + lucroStr + ' · aguardando histórico do mês';
+  }
+
+  _setCardData(card, classe, tagTxt, titulo, sub);
+}
+
+async function fetchGARE11History(){
+  const card = document.getElementById('gare11-alert-card');
+  if(!card) return;
+  const item = portfolio.find(a=>a.ticker==='GARE11');
+  const cotAtual = item ? item.cot : null;
+  try{
+    const r = await fetch('https://brapi.dev/api/quote/GARE11?range=5d&interval=1d&token=' + BRAPI_TOKEN);
+    if(!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const hist = ((d.results||[])[0] && (d.results||[])[0].historicalDataPrice) || [];
+    const highs = hist.map(function(h){ return h.high; }).filter(Boolean);
+    const max5d = highs.length ? Math.max.apply(null, highs) : null;
+    updateGARE11AlertCard(cotAtual, max5d);
+  }catch(e){
+    updateGARE11AlertCard(cotAtual, null);
+  }
+}
+
+function updateGARE11AlertCard(cot, max5d){
+  const card = document.getElementById('gare11-alert-card');
+  if(!card) return;
+  const PM = 8.38;
+  const qtd = 100;
+  const pctPM = cot ? ((cot - PM) / PM * 100) : null;
+  const pctStr = pctPM !== null ? (pctPM>=0?'+':'') + pctPM.toFixed(1) + '%' : '';
+  const lucroTotal = cot ? ((cot - PM) * qtd) : null;
+  const lucroStr = lucroTotal !== null ? 'R$' + lucroTotal.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '–';
+  const naMaxima = max5d && cot && ((max5d - cot) / max5d) < 0.005;
+  const distPct = max5d && cot ? ((max5d - cot) / max5d * 100) : null;
+  var classe, tagTxt, titulo, sub;
+  if(naMaxima){
+    classe = 'a-green';
+    tagTxt = '🔔 MÁXIMA 5 DIAS — AVALIAR VENDA';
+    titulo = 'GARE11 · R$' + (cot ? cot.toFixed(2) : '--') + ' — pico dos últimos 5 dias!';
+    sub = 'Máxima 5D: R$' + (max5d ? max5d.toFixed(2) : '--') + ' · ' + pctStr + ' vs PM · Resultado nas 100 cotas: ' + lucroStr + '. Momento de avaliar venda!';
+    dispararNotificacaoPush('🔔 GARE11 bateu a máxima de 5 dias!', 'Cotação R$' + (cot ? cot.toFixed(2) : '--') + ' · Resultado: ' + lucroStr + ' · Avalie vender agora!');
+  } else if(cot && max5d){
+    classe = 'a-blue';
+    tagTxt = 'GARE11 · monitorando máxima 5D';
+    titulo = 'GARE11 · R$' + cot.toFixed(2) + ' (' + pctStr + ' vs PM)';
+    sub = 'Máxima 5 dias: R$' + max5d.toFixed(2) + ' · falta ' + (distPct ? distPct.toFixed(1) : '--') + '% · Resultado atual: ' + lucroStr;
+  } else {
+    classe = 'a-blue';
+    tagTxt = 'GARE11 · 100 cotas';
+    titulo = cot ? 'GARE11 · R$' + cot.toFixed(2) + ' (' + pctStr + ' vs PM)' : 'GARE11 · carregando cotação...';
+    sub = 'Resultado atual: ' + lucroStr + ' · aguardando histórico 5 dias';
+  }
+  _setCardData(card, classe, tagTxt, titulo, sub);
+}
+
+async function fetchIRIM11History(){
+  const card = document.getElementById('irim11-alert-card');
+  if(!card) return;
+  const item = portfolio.find(a=>a.ticker==='IRIM11');
+  const cotAtual = item ? item.cot : null;
+  try{
+    const r = await fetch('https://brapi.dev/api/quote/IRIM11?range=5d&interval=1d&token=' + BRAPI_TOKEN);
+    if(!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const hist = ((d.results||[])[0] && (d.results||[])[0].historicalDataPrice) || [];
+    const highs = hist.map(function(h){ return h.high; }).filter(Boolean);
+    const max5d = highs.length ? Math.max.apply(null, highs) : null;
+    updateIRIM11AlertCard(cotAtual, max5d);
+  }catch(e){
+    updateIRIM11AlertCard(cotAtual, null);
+  }
+}
+
+function updateIRIM11AlertCard(cot, max5d){
+  const card = document.getElementById('irim11-alert-card');
+  if(!card) return;
+  const PM = 67.90;
+  const qtd = 58;
+  const pctPM = cot ? ((cot - PM) / PM * 100) : null;
+  const pctStr = pctPM !== null ? (pctPM>=0?'+':'') + pctPM.toFixed(1) + '%' : '';
+  const lucroTotal = cot ? ((cot - PM) * qtd) : null;
+  const lucroStr = lucroTotal !== null ? 'R$' + lucroTotal.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '–';
+  const naMaxima = max5d && cot && ((max5d - cot) / max5d) < 0.005;
+  const distPct = max5d && cot ? ((max5d - cot) / max5d * 100) : null;
+  var classe, tagTxt, titulo, sub;
+  if(naMaxima){
+    classe = 'a-green';
+    tagTxt = '🔔 MÁXIMA 5 DIAS — AVALIAR VENDA';
+    titulo = 'IRIM11 · R$' + (cot ? cot.toFixed(2) : '--') + ' — pico dos últimos 5 dias!';
+    sub = 'Máxima 5D: R$' + (max5d ? max5d.toFixed(2) : '--') + ' · ' + pctStr + ' vs PM · Resultado nas 58 cotas: ' + lucroStr + '. Momento de avaliar venda!';
+    dispararNotificacaoPush('🔔 IRIM11 bateu a máxima de 5 dias!', 'Cotação R$' + (cot ? cot.toFixed(2) : '--') + ' · Resultado: ' + lucroStr + ' · Avalie vender agora!');
+  } else if(cot && max5d){
+    classe = 'a-blue';
+    tagTxt = 'IRIM11 · monitorando máxima 5D';
+    titulo = 'IRIM11 · R$' + cot.toFixed(2) + ' (' + pctStr + ' vs PM)';
+    sub = 'Máxima 5 dias: R$' + max5d.toFixed(2) + ' · falta ' + (distPct ? distPct.toFixed(1) : '--') + '% · Resultado atual: ' + lucroStr;
+  } else {
+    classe = 'a-blue';
+    tagTxt = 'IRIM11 · 58 cotas';
+    titulo = cot ? 'IRIM11 · R$' + cot.toFixed(2) + ' (' + pctStr + ' vs PM)' : 'IRIM11 · carregando cotação...';
+    sub = 'Resultado atual: ' + lucroStr + ' · aguardando histórico 5 dias';
+  }
+  _setCardData(card, classe, tagTxt, titulo, sub);
+}
+
+async function fetchPRIO3History(){
+  const card = document.getElementById('prio3-alert-card');
+  if(!card) return;
+  const item = portfolio.find(a=>a.ticker==='PRIO3');
+  const cotAtual = item ? item.cot : null;
+  try{
+    const r = await fetch('https://brapi.dev/api/quote/PRIO3?range=5d&interval=1d&token=' + BRAPI_TOKEN);
+    if(!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const hist = ((d.results||[])[0] && (d.results||[])[0].historicalDataPrice) || [];
+    const highs = hist.map(function(h){ return h.high; }).filter(Boolean);
+    const max5d = highs.length ? Math.max.apply(null, highs) : null;
+    updatePRIO3AlertCard(cotAtual, max5d);
+  }catch(e){
+    updatePRIO3AlertCard(cotAtual, null);
+  }
+}
+
+function updatePRIO3AlertCard(cot, max5d){
+  const card = document.getElementById('prio3-alert-card');
+  if(!card) return;
+  const PM = 53.43;
+  const qtd = 20;
+  const pctPM = cot ? ((cot - PM) / PM * 100) : null;
+  const pctStr = pctPM !== null ? (pctPM>=0?'+':'') + pctPM.toFixed(1) + '%' : '';
+  const lucroTotal = cot ? ((cot - PM) * qtd) : null;
+  const lucroStr = lucroTotal !== null ? 'R$' + lucroTotal.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '–';
+  const naMaxima = max5d && cot && ((max5d - cot) / max5d) < 0.005;
+  const distPct = max5d && cot ? ((max5d - cot) / max5d * 100) : null;
+  var classe, tagTxt, titulo, sub;
+  if(naMaxima){
+    classe = 'a-green';
+    tagTxt = '🔔 MÁXIMA 5 DIAS — AVALIAR VENDA';
+    titulo = 'PRIO3 · R$' + (cot ? cot.toFixed(2) : '--') + ' — pico dos últimos 5 dias!';
+    sub = 'Máxima 5D: R$' + (max5d ? max5d.toFixed(2) : '--') + ' · ' + pctStr + ' vs PM · Lucro nas 20 cotas: ' + lucroStr + '. Momento de avaliar venda!';
+    dispararNotificacaoPush('🔔 PRIO3 bateu a máxima de 5 dias!', 'Cotação R$' + (cot ? cot.toFixed(2) : '--') + ' · Lucro: ' + lucroStr + ' · Avalie vender agora!');
+  } else if(cot && max5d){
+    classe = 'a-blue';
+    tagTxt = 'PRIO3 · monitorando máxima 5D';
+    titulo = 'PRIO3 · R$' + cot.toFixed(2) + ' (' + pctStr + ' vs PM)';
+    sub = 'Máxima 5 dias: R$' + max5d.toFixed(2) + ' · falta ' + (distPct ? distPct.toFixed(1) : '--') + '% · Lucro atual: ' + lucroStr;
+  } else {
+    classe = 'a-blue';
+    tagTxt = 'PRIO3 · 20 cotas';
+    titulo = cot ? 'PRIO3 · R$' + cot.toFixed(2) + ' (' + pctStr + ' vs PM)' : 'PRIO3 · carregando cotação...';
+    sub = 'Lucro atual: ' + lucroStr + ' · aguardando histórico 5 dias';
+  }
   _setCardData(card, classe, tagTxt, titulo, sub);
 }
 
