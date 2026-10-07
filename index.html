@@ -975,7 +975,7 @@ tr:last-child td { border-bottom: none; }
     </div>
     <div class="hero-pills">
       <div class="pill"><div class="pill-lbl">NU Conta</div><div class="pill-val">R$&nbsp;4.208</div></div>
-      <div class="pill"><div class="pill-lbl">NU Carteira</div><div class="pill-val">R$&nbsp;58.826</div></div>
+      <div class="pill"><div class="pill-lbl">NU Carteira</div><div class="pill-val">R$&nbsp;57.624</div></div>
       <div class="pill"><div class="pill-lbl">NU Caixinhas</div><div class="pill-val">R$&nbsp;80.352</div></div>
       <div class="pill"><div class="pill-lbl">Fundos XP</div><div class="pill-val">R$&nbsp;3.791</div></div>
       <div class="pill"><div class="pill-lbl">Ext · R$1.4k/mês</div><div class="pill-val">R$&nbsp;35.000</div></div>
@@ -986,12 +986,12 @@ tr:last-child td { border-bottom: none; }
   <div class="g2">
     <div class="stat-card">
       <div class="stat-lbl">Nubank Total</div>
-      <div class="stat-val c-green">R$&nbsp;138.918</div>
-      <div class="stat-sub">Conta + Carteira + Caixinhas · +R$13.907/ano</div>
+      <div class="stat-val c-green">R$&nbsp;142.184</div>
+      <div class="stat-sub">Conta + Carteira + Caixinhas · +R$14.106/ano</div>
     </div>
     <div class="stat-card">
       <div class="stat-lbl">Nubank Carteira</div>
-      <div class="stat-val">R$&nbsp;58.826</div>
+      <div class="stat-val">R$&nbsp;57.624</div>
       <div class="stat-sub">Bolsa 68,6% · RF 13,1% · Fundos 10,2% · Tesouro 8,1%</div>
     </div>
     <div class="stat-card">
@@ -1749,9 +1749,9 @@ function updateTotals(){
 
 // Nubank — valores direto dos prints (não somar B3 separado, já está incluso)
 const NUBANK_CONTA      = 4208.45;   // saldo disponível conta corrente
-const NUBANK_CARTEIRA   = 58826.32;  // Minha Carteira (Bolsa+RF+Fundos+Tesouro)
+const NUBANK_CARTEIRA   = 57623.80;  // Minha Carteira (Bolsa+RF+Fundos+Tesouro)
 const NUBANK_CAIXINHAS  = 80352.04;  // todas as caixinhas (Reserva, Carro, Turbo, etc.)
-const NUBANK_TOTAL      = NUBANK_CONTA + NUBANK_CARTEIRA + NUBANK_CAIXINHAS; // R$143.386,81
+const NUBANK_TOTAL      = NUBANK_CONTA + NUBANK_CARTEIRA + NUBANK_CAIXINHAS; // R$142.184,29
 const FUNDOS_XP         = 3791.36;   // 4 fundos XP
 const FUNDO_EXTERNO     = 35000;     // rende R$1.400/mês (renda passiva mensal)
 
@@ -2676,9 +2676,9 @@ function buildRobo(){
       <div class="tend-icon info">💜</div>
       <div class="tend-main">
         <div class="tend-ticker">Nubank · Minha Carteira</div>
-        <div class="tend-desc">Total bruto R$59.259,15 · Líquido R$58.971,73 · +R$7.036,39 em 12 meses<br>Bolsa 68,8% · RF 13% · Fundos 10,1% · Tesouro 8%</div>
+        <div class="tend-desc">Total R$57.623,80 · +R$6.542,04 rendimento<br>Bolsa 68,6% · RF 13,1% · Fundos 10,2% · Tesouro 8,1%</div>
       </div>
-      <span class="tend-badge up">+R$7.036</span>
+      <span class="tend-badge up">+R$6.542</span>
     </div>
     <div class="sec-lbl" style="margin:16px 0 8px">🏦 Caixinhas · R$80.352,04</div>
     ${buildCaixinhasHtml()}
