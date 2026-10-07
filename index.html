@@ -2439,6 +2439,10 @@ function sparklineSVG(pts, color){
 function buildRobo(){
   const el = document.getElementById('robo-content');
   if(!el) return;
+  if(typeof companyData === 'undefined' || !companyData){
+    setTimeout(buildRobo, 200);
+    return;
+  }
 
   try {
   const analises = portfolio.map(a=>{
@@ -2469,7 +2473,8 @@ function buildRobo(){
   const scoreRisco  = emPerda<=3 ? 80 : emPerda<=6 ? 60 : 40;
 
   function tendCard(item, tipo, badge, desc){
-    const cd = companyData[item.ticker]||{};
+    if(!item || typeof companyData === 'undefined' || !companyData) return '';
+    const cd = (companyData && companyData[item.ticker]) || {};
     const acao = item.acao||'manter';
     const s = tipo==='up'?'✦':tipo==='down'?'⚠':tipo==='warn'?'⟳':'ℹ';
     const color = tipo==='up'?'#4ade80':tipo==='down'?'#f87171':'#facc15';
