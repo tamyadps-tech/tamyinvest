@@ -1809,12 +1809,14 @@ async function fetchQuotes(){
     updatePatrimonio();
     fetchB3SA3History();
     // Re-renderiza o robô se a aba estiver ativa
-    if(document.getElementById('screen-robo')?.classList.contains('active')) buildRobo();
+    var roboEl = document.getElementById('screen-robo');
+    if(roboEl && roboEl.classList.contains('active')) buildRobo();
   }catch(e){
     document.getElementById('cot-status').textContent='Offline — usando último preço conhecido';
     updatePatrimonio();
     updateB3SA3AlertCard(null, null);
-    if(document.getElementById('screen-robo')?.classList.contains('active')) buildRobo();
+    var roboEl2 = document.getElementById('screen-robo');
+    if(roboEl2 && roboEl2.classList.contains('active')) buildRobo();
   }
 }
 
@@ -1828,7 +1830,7 @@ async function fetchB3SA3History(){
     const r = await fetch(`https://brapi.dev/api/quote/B3SA3?range=5d&interval=1d&token=${BRAPI_TOKEN}`);
     if(!r.ok) throw new Error(r.status);
     const d = await r.json();
-    const hist = (d.results||[])[0]?.historicalDataPrice || [];
+    const hist = ((d.results||[])[0] && (d.results||[])[0].historicalDataPrice) || [];
     const highs = hist.map(h=>h.high).filter(Boolean);
     const max5d = highs.length ? Math.max(...highs) : null;
     updateB3SA3AlertCard(cotAtual, max5d);
@@ -1929,23 +1931,23 @@ function updateB3SA3AlertCard(cot, max5d){
   if(naMaxima){
     classe = 'a-green';
     tagTxt = '🔔 MÁXIMA 5 DIAS — AVALIAR VENDA';
-    titulo = `B3SA3 · R$${cot?.toFixed(2)} — pico dos últimos 5 dias!`;
-    sub = `Máxima 5D: R$${max5d?.toFixed(2)} · Você está ${pctStr} vs PM · Lucro nas 50 cotas: ${lucroStr}. Momento de avaliar nova realização!`;
+    titulo = `B3SA3 · R$${cot ? cot.toFixed(2) : '--'} — pico dos últimos 5 dias!`;
+    sub = `Máxima 5D: R$${max5d ? max5d.toFixed(2) : '--'} · Você está ${pctStr} vs PM · Lucro nas 50 cotas: ${lucroStr}. Momento de avaliar nova realização!`;
     // 🔔 Dispara notificação real no celular
     dispararNotificacaoPush(
       '🔔 B3SA3 bateu a máxima 5 dias!',
-      `Cotação R$${cot?.toFixed(2)} · Lucro: ${lucroStr} · Avalie vender agora!`
+      `Cotação R$${cot ? cot.toFixed(2) : '--'} · Lucro: ${lucroStr} · Avalie vender agora!`
     );
   } else if(cot && max5d){
-    const faltaPct = distMaxima?.toFixed(1);
+    const faltaPct = distMaxima ? distMaxima.toFixed(1) : '--';
     classe = 'a-blue';
     tagTxt = '50 cotas mantidas · monitorando';
-    titulo = `B3SA3 · R$${cot?.toFixed(2)} (${pctStr} vs PM)`;
-    sub = `Máxima 5 dias: R$${max5d?.toFixed(2)} · falta ${faltaPct}% para bater o pico · Lucro atual: ${lucroStr}`;
+    titulo = `B3SA3 · R$${cot.toFixed(2)} (${pctStr} vs PM)`;
+    sub = `Máxima 5 dias: R$${max5d.toFixed(2)} · falta ${faltaPct}% para bater o pico · Lucro atual: ${lucroStr}`;
   } else {
     classe = 'a-blue';
     tagTxt = '50 cotas mantidas ✓';
-    titulo = cot ? `B3SA3 · R$${cot?.toFixed(2)} (${pctStr} vs PM)` : 'B3SA3 · carregando cotação...';
+    titulo = cot ? `B3SA3 · R$${cot.toFixed(2)} (${pctStr} vs PM)` : 'B3SA3 · carregando cotação...';
     sub = `Lucro atual: ${lucroStr} · aguardando histórico 5 dias`;
   }
 
@@ -2275,7 +2277,7 @@ function openModal(ticker, contexto){
   // Monta o corpo
   const item = portfolio.find(a=>a.ticker===ticker);
   const alerta = alertaJustificativas[contexto] || alertaJustificativas['manter'];
-  const justText = company.acoes?.[contexto] || company.acoes?.manter || 'Posição dentro do esperado.';
+  const justText = (company.acoes && company.acoes[contexto]) || (company.acoes && company.acoes.manter) || 'Posição dentro do esperado.';
   const tagColor = alerta.cor;
 
   let kpiBlock = '';
