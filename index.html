@@ -2030,15 +2030,20 @@ function toggleTheme(){
   try{ localStorage.setItem('ti-theme',t); }catch(e){}
 }
 
+// Tema — pode rodar antes do DOM
 (function(){
   try{
-    const t=localStorage.getItem('ti-theme');
+    var t=localStorage.getItem('ti-theme');
     if(t) document.documentElement.setAttribute('data-theme',t);
   }catch(e){}
+})();
 
-  const d=new Date();
-  document.getElementById('today-date').textContent=
-    d.toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
+// Todo o resto só roda após DOM pronto
+document.addEventListener('DOMContentLoaded', function(){
+ (function(){
+  var d=new Date();
+  var el=document.getElementById('today-date');
+  if(el) el.textContent=d.toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
 
   // Fix cenario-card margin
   document.querySelectorAll('.cenario-card').forEach(el=>{
@@ -2076,11 +2081,12 @@ function toggleTheme(){
     }).catch(function(){});
   }
 
-  setInterval(()=>{
-    const now=new Date(), m=now.getHours()*60+now.getMinutes();
+  setInterval(function(){
+    var now=new Date(), m=now.getHours()*60+now.getMinutes();
     if(m>=600&&m<=1020) fetchQuotes();
   },5*60*1000);
-})();
+ })();
+}); // fim DOMContentLoaded
 
 // ──────────────────────────────────────────────
 // MODAL — dados de empresa + justificativa
