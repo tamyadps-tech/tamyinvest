@@ -1808,10 +1808,13 @@ async function fetchQuotes(){
     buildTable(curFilter);
     updatePatrimonio();
     fetchB3SA3History();
+    // Re-renderiza o robô se a aba estiver ativa
+    if(document.getElementById('screen-robo')?.classList.contains('active')) buildRobo();
   }catch(e){
     document.getElementById('cot-status').textContent='Offline — usando último preço conhecido';
     updatePatrimonio();
     updateB3SA3AlertCard(null, null);
+    if(document.getElementById('screen-robo')?.classList.contains('active')) buildRobo();
   }
 }
 
@@ -1990,7 +1993,14 @@ function go(id){
   document.getElementById('screen-'+id).classList.add('active');
   document.getElementById('nb-'+id).classList.add('active');
   document.querySelector('.main').scrollTop=0;
-  if(id==='robo') buildRobo();
+  if(id==='robo'){
+    // Se cotações ainda não chegaram (cot-status ainda é padrão), aguarda fetchQuotes
+    const status = document.getElementById('cot-status')?.textContent||'';
+    if(status.includes('Tempo real') || status.includes('Offline')){
+      buildRobo();
+    }
+    // Caso contrário o buildRobo será chamado pelo fetchQuotes quando terminar
+  }
 }
 
 function toggleTheme(){
