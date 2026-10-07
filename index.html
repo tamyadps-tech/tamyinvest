@@ -1269,6 +1269,7 @@ tr:last-child td { border-bottom: none; }
     </div>
   </div>
   <div class="cot-status" id="cot-status">Buscando cotações em tempo real...</div>
+  <div style="text-align:center;font-size:9px;color:var(--fg3);padding-bottom:4px;opacity:0.5">v291968a · 07/10 05h</div>
 </div>
 
 <!-- ══ ALERTAS ══ -->
@@ -2725,7 +2726,7 @@ function buildRobo(){
   }
   el.innerHTML = html;
   } catch(err) {
-    el.innerHTML = `<div style="text-align:center;padding:40px 16px;color:var(--red);font-size:13px">Erro ao analisar carteira: ${err.message}</div>`;
+    el.innerHTML = `<div style="text-align:left;padding:20px 16px;color:var(--red);font-size:12px;word-break:break-all"><strong>Erro:</strong> ${err.message}<br><br><strong>Stack:</strong><br>${(err.stack||'').replace(/\n/g,'<br>')}<br><br><strong>companyData:</strong> ${typeof companyData}<br><strong>portfolio:</strong> ${typeof portfolio} len=${Array.isArray(portfolio)?portfolio.length:'N/A'}</div>`;
     console.error('buildRobo error:', err);
   }
 }
