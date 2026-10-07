@@ -2328,14 +2328,8 @@ function openModal(ticker, contexto){
       <div class="modal-section-title" style="color:${tagColor}">${alerta.tag} — Análise</div>
       <div class="modal-just" style="border-left:3px solid ${tagColor};padding-left:12px">${justText}</div>
     </div>
-    ${pontosHTML ? `<div class="modal-section">
-      <div class="modal-section-title">✦ Pontos Positivos</div>
-      <div class="modal-just"><ul style="list-style:none;padding:0;margin:0">${pontosHTML}</ul></div>
-    </div>` : ''}
-    ${riscosHTML ? `<div class="modal-section">
-      <div class="modal-section-title" style="color:var(--red)">⚠ Riscos</div>
-      <div class="modal-just" style="border-left:3px solid var(--red);padding-left:12px"><ul style="list-style:none;padding:0;margin:0">${riscosHTML}</ul></div>
-    </div>` : ''}
+    ${pontosHTML ? '<div class="modal-section"><div class="modal-section-title">✦ Pontos Positivos</div><div class="modal-just"><ul style="list-style:none;padding:0;margin:0">'+pontosHTML+'</ul></div></div>' : ''}
+    ${riscosHTML ? '<div class="modal-section"><div class="modal-section-title" style="color:var(--red)">⚠ Riscos</div><div class="modal-just" style="border-left:3px solid var(--red);padding-left:12px"><ul style="list-style:none;padding:0;margin:0">'+riscosHTML+'</ul></div></div>' : ''}
     <div style="padding:12px 16px;font-size:11px;color:var(--fg3);border-top:1px solid var(--border);margin-top:4px">
       ℹ️ Cotações de referência — atualize manualmente após ver a B3. Análises baseadas nos seus dados reais de carteira.
     </div>
@@ -2382,7 +2376,7 @@ function buildCaixinhasHtml(){
       <div class="tend-icon" style="background:${caixTipo[c.tipo]}22;color:${caixTipo[c.tipo]};font-size:18px">🏦</div>
       <div class="tend-main">
         <div class="tend-ticker">${c.nome}</div>
-        <div class="tend-desc" style="margin-bottom:4px">${c.valor>0?`R$${c.valor.toLocaleString('pt-BR',{minimumFractionDigits:2})} · Rendeu ${cdiFmt(c.rendimento)} em 12 meses`:'Sem saldo'}</div>
+        <div class="tend-desc" style="margin-bottom:4px">${c.valor>0 ? 'R$'+c.valor.toLocaleString('pt-BR',{minimumFractionDigits:2})+' · Rendeu '+cdiFmt(c.rendimento)+' em 12 meses' : 'Sem saldo'}</div>
         <div class="tend-desc" style="color:var(--fg2)">${c.alerta}</div>
         <div class="tend-desc" style="color:var(--blue);margin-top:2px">💡 ${c.conselho}</div>
       </div>
@@ -2515,29 +2509,25 @@ function buildRobo(){
         const barPct    = Math.min(100, Math.max(2, (a.cot / a.pm) * 100));
         const color     = atingiu ? '#4ade80' : '#f87171';
         const spark     = sparklineSVG(a.hist5d, color);
-        return `<div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px 12px;margin-bottom:8px${atingiu?';border:1.5px solid #4ade80':''}" onclick="openModal('${a.ticker}','monitorar-venda')" style="cursor:pointer">
-          ${atingiu ? `<div style="background:#4ade80;color:#000;font-size:10px;font-weight:800;padding:2px 10px;border-radius:20px;display:inline-block;margin-bottom:6px;letter-spacing:.5px">🔔 ATINGIU BREAKEVEN — HORA DE VENDER!</div>` : ''}
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="flex:1;min-width:0">
-              <div style="font-size:13px;font-weight:700;color:var(--fg1)">${a.ticker}
-                <span style="font-weight:400;color:var(--fg3);font-size:11px"> · ${a.qtd} cotas</span>
-              </div>
-              <div style="display:flex;gap:16px;margin:4px 0;font-size:11px;color:var(--fg3)">
-                <span>PM <strong style="color:var(--fg1)">R$${a.pm.toFixed(2)}</strong></span>
-                <span>Cot <strong style="color:${color}">R$${a.cot.toFixed(2)}</strong></span>
-                ${atingiu
-                  ? `<span style="color:#4ade80;font-weight:700">✓ LUCRO R$${Math.abs(a.rs).toLocaleString('pt-BR',{maximumFractionDigits:0})}</span>`
-                  : `<span style="color:#f87171">Falta R$${Math.abs(faltaR).toLocaleString('pt-BR',{maximumFractionDigits:0})} (${Math.abs(faltaPct).toFixed(1)}%↑)</span>`
-                }
-              </div>
-              <div style="background:rgba(255,255,255,0.08);border-radius:4px;height:4px;overflow:hidden;margin-top:2px">
-                <div style="height:100%;width:${barPct}%;background:${color};border-radius:4px;transition:width .4s"></div>
-              </div>
-              <div style="font-size:10px;color:var(--fg3);margin-top:3px">${barPct.toFixed(0)}% do caminho até o PM</div>
-            </div>
-            ${spark}
-          </div>
-        </div>`;
+        var bordaExtra = atingiu ? ';border:1.5px solid #4ade80' : '';
+        var breakevenBanner = atingiu ? '<div style="background:#4ade80;color:#000;font-size:10px;font-weight:800;padding:2px 10px;border-radius:20px;display:inline-block;margin-bottom:6px;letter-spacing:.5px">🔔 ATINGIU BREAKEVEN — HORA DE VENDER!</div>' : '';
+        var resultadoSpan = atingiu
+          ? '<span style="color:#4ade80;font-weight:700">✓ LUCRO R$' + Math.abs(a.rs).toLocaleString('pt-BR',{maximumFractionDigits:0}) + '</span>'
+          : '<span style="color:#f87171">Falta R$' + Math.abs(faltaR).toLocaleString('pt-BR',{maximumFractionDigits:0}) + ' (' + Math.abs(faltaPct).toFixed(1) + '%↑)</span>';
+        return '<div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px 12px;margin-bottom:8px' + bordaExtra + '" onclick="openModal(\'' + a.ticker + '\',\'monitorar-venda\')" style="cursor:pointer">' +
+          breakevenBanner +
+          '<div style="display:flex;align-items:center;gap:10px"><div style="flex:1;min-width:0">' +
+          '<div style="font-size:13px;font-weight:700;color:var(--fg1)">' + a.ticker +
+          '<span style="font-weight:400;color:var(--fg3);font-size:11px"> · ' + a.qtd + ' cotas</span></div>' +
+          '<div style="display:flex;gap:16px;margin:4px 0;font-size:11px;color:var(--fg3)">' +
+          '<span>PM <strong style="color:var(--fg1)">R$' + a.pm.toFixed(2) + '</strong></span>' +
+          '<span>Cot <strong style="color:' + color + '">R$' + a.cot.toFixed(2) + '</strong></span>' +
+          resultadoSpan +
+          '</div>' +
+          '<div style="background:rgba(255,255,255,0.08);border-radius:4px;height:4px;overflow:hidden;margin-top:2px">' +
+          '<div style="height:100%;width:' + barPct + '%;background:' + color + ';border-radius:4px;transition:width .4s"></div></div>' +
+          '<div style="font-size:10px;color:var(--fg3);margin-top:3px">' + barPct.toFixed(0) + '% do caminho até o PM</div>' +
+          '</div>' + spark + '</div></div>';
       }).join('')}
     </div>`;
   }
@@ -2666,18 +2656,23 @@ function buildRobo(){
     <div class="tend-group-lbl" style="margin-bottom:10px">📊 Comparação com Cenários Similares</div>
     <div style="font-size:11px;color:var(--fg3);margin-bottom:10px">Carteiras com perfil similar (B3 + FIIs + RF + Reserva Nubank) no mesmo período:</div>
     <div style="display:grid;gap:8px">
-      ${[
-        {label:'Ibovespa (IBOV)', ret:'+8,4%', cor:'#4ade80', desc:'Índice geral da B3 — referência de mercado'},
-        {label:'Sua Carteira B3', ret:totalB3gain>=0?'+'+Math.abs(totalB3gain/analises.reduce((s,a)=>s+a.pm*a.qtd,0)*100).toFixed(1)+'%':'-'+Math.abs(totalB3gain/analises.reduce((s,a)=>s+a.pm*a.qtd,0)*100).toFixed(1)+'%', cor:totalB3gain>=0?'#4ade80':'#f87171', desc:'Resultado atual vs. preço médio pago'},
-        {label:'CDI (12 meses)', ret:'+10,5%', cor:'#facc15', desc:'Referência de renda fixa — Selic atual'},
-        {label:'Carteira Conservadora', ret:'+9,2%', cor:'#94a3b8', desc:'70% RF + 20% FIIs + 10% Ações'}
-      ].map(c=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:8px">
-        <span style="color:${c.cor};font-weight:700;font-size:14px;min-width:56px;font-variant-numeric:tabular-nums">${c.ret}</span>
-        <div style="min-width:0">
-          <div style="font-size:12px;font-weight:600;color:var(--fg1)">${c.label}</div>
-          <div style="font-size:11px;color:var(--fg3)">${c.desc}</div>
-        </div>
-      </div>`).join('')}
+      ${(function(){
+        var totalPM = analises.reduce(function(s,a){return s+a.pm*a.qtd;},0);
+        var carteiraRet = totalB3gain>=0 ? ('+'+Math.abs(totalB3gain/totalPM*100).toFixed(1)+'%') : ('-'+Math.abs(totalB3gain/totalPM*100).toFixed(1)+'%');
+        var carteiraCor = totalB3gain>=0 ? '#4ade80' : '#f87171';
+        var cenarios = [
+          {label:'Ibovespa (IBOV)', ret:'+8,4%', cor:'#4ade80', desc:'Índice geral da B3 — referência de mercado'},
+          {label:'Sua Carteira B3', ret:carteiraRet, cor:carteiraCor, desc:'Resultado atual vs. preço médio pago'},
+          {label:'CDI (12 meses)', ret:'+10,5%', cor:'#facc15', desc:'Referência de renda fixa — Selic atual'},
+          {label:'Carteira Conservadora', ret:'+9,2%', cor:'#94a3b8', desc:'70% RF + 20% FIIs + 10% Ações'}
+        ];
+        return cenarios.map(function(c){
+          return '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:8px">' +
+            '<span style="color:'+c.cor+';font-weight:700;font-size:14px;min-width:56px;font-variant-numeric:tabular-nums">'+c.ret+'</span>' +
+            '<div style="min-width:0"><div style="font-size:12px;font-weight:600;color:var(--fg1)">'+c.label+'</div>' +
+            '<div style="font-size:11px;color:var(--fg3)">'+c.desc+'</div></div></div>';
+        }).join('');
+      })()}
     </div>
   </div>`;
 
@@ -2717,8 +2712,8 @@ function buildRobo(){
     </div>
     <div class="robot-verdict">
       <strong>Veredicto do Robô:</strong> ${emLucro} ativo${emLucro!==1?'s':''} em lucro · ${emPerda} em queda · resultado B3 ${totalB3gain>=0?'positivo':'negativo'} de ${totalB3gain>=0?'+':''}R$${Math.abs(totalB3gain).toLocaleString('pt-BR',{maximumFractionDigits:0})}.
-      ${emRisco.some(a=>a.acao==='vender')?` <strong>⚠ Não vender com prejuízo — aguardar recuperação de ${emRisco.filter(a=>a.acao==='vender').map(a=>a.ticker).join(', ')} antes de sair.</strong>`:''}
-      ${emAlta.length>0?` Considere realizar parte do lucro em ${emAlta[0].ticker}.`:''}
+      ${(function(){ var vendedores=emRisco.filter(function(a){return a.acao==='vender';}); return vendedores.length ? ' <strong>⚠ Não vender com prejuízo — aguardar recuperação de '+vendedores.map(function(a){return a.ticker;}).join(', ')+' antes de sair.</strong>' : ''; })()}
+      ${emAlta.length>0?' Considere realizar parte do lucro em '+emAlta[0].ticker+'.':''}
     </div>
   </div>`;
 
