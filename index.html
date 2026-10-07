@@ -407,6 +407,8 @@ nav {
 }
 .ctry.gl { background: rgba(155,114,240,.1); border-color: rgba(155,114,240,.2); color: var(--purple); }
 .ctry.eu { background: rgba(0,200,128,.1); border-color: rgba(0,200,128,.2); color: var(--green); }
+.ctry.jp { background: rgba(232,57,74,.1); border-color: rgba(232,57,74,.2); color: var(--red); }
+.ctry.em { background: rgba(200,148,26,.1); border-color: rgba(200,148,26,.2); color: var(--gold2); }
 .opp-body { flex: 1; min-width: 0; }
 .opp-ticker { font-size: 13px; font-weight: 700; color: var(--fg); font-family: 'JetBrains Mono', monospace; letter-spacing: -.2px; }
 .opp-desc { font-size: 11px; color: var(--fg2); margin-top: 2px; line-height: 1.45; }
@@ -1083,7 +1085,7 @@ tr:last-child td { border-bottom: none; }
         <div class="opp-ticker">IVVB11 — ETF S&P 500</div>
         <div class="opp-desc">500 maiores empresas dos EUA em reais. Sem conta no exterior, sem IOF.</div>
       </div>
-      <div class="opp-badge">B3 · D+2</div>
+      <div class="opp-badge">B3 · USD</div>
     </div>
     <div class="opp-item" onclick="openModal('QDVE34','internacional')" style="cursor:pointer">
       <div class="ctry">US</div>
@@ -1091,28 +1093,44 @@ tr:last-child td { border-bottom: none; }
         <div class="opp-ticker">QDVE34 — S&P 500 Tech</div>
         <div class="opp-desc">Nvidia, Apple, Meta, Alphabet. Foco em IA e tecnologia de ponta.</div>
       </div>
-      <div class="opp-badge">B3 · D+2</div>
-    </div>
-    <div class="opp-item" onclick="openModal('ACWI11','internacional')" style="cursor:pointer">
-      <div class="ctry gl">GL</div>
-      <div class="opp-body">
-        <div class="opp-ticker">ACWI11 — ETF Global</div>
-        <div class="opp-desc">23 países · EUA + Europa + Emergentes. Máxima diversificação geográfica.</div>
-      </div>
-      <div class="opp-badge">B3 · D+2</div>
+      <div class="opp-badge">B3 · USD</div>
     </div>
     <div class="opp-item" onclick="openModal('EURP11','internacional')" style="cursor:pointer">
       <div class="ctry eu">EU</div>
       <div class="opp-body">
         <div class="opp-ticker">EURP11 — ETF Europa</div>
-        <div class="opp-desc">LVMH, Nestlé, SAP. Baixa correlação com Ibovespa e dólar.</div>
+        <div class="opp-desc">LVMH, Nestlé, SAP. Diversificação em euro e libra esterlina.</div>
       </div>
-      <div class="opp-badge">B3 · D+2</div>
+      <div class="opp-badge">B3 · EUR/GBP</div>
+    </div>
+    <div class="opp-item" onclick="openModal('JPSA11','internacional')" style="cursor:pointer">
+      <div class="ctry jp">JP</div>
+      <div class="opp-body">
+        <div class="opp-ticker">JPSA11 — ETF Japão</div>
+        <div class="opp-desc">Toyota, Sony, Softbank. 3ª maior economia do mundo em iene — moeda histórica de proteção.</div>
+      </div>
+      <div class="opp-badge">B3 · JPY</div>
+    </div>
+    <div class="opp-item" onclick="openModal('HASH11','internacional')" style="cursor:pointer">
+      <div class="ctry em">EM</div>
+      <div class="opp-body">
+        <div class="opp-ticker">HASH11 — ETF Emergentes</div>
+        <div class="opp-desc">China, Índia, Coreia do Sul, Taiwan. Alto crescimento, valuations descontados.</div>
+      </div>
+      <div class="opp-badge">B3 · Multi</div>
+    </div>
+    <div class="opp-item" onclick="openModal('ACWI11','internacional')" style="cursor:pointer">
+      <div class="ctry gl">GL</div>
+      <div class="opp-body">
+        <div class="opp-ticker">ACWI11 — ETF Global</div>
+        <div class="opp-desc">47 países · EUA + Europa + Ásia + Emergentes. Máxima diversificação geográfica e de moedas.</div>
+      </div>
+      <div class="opp-badge">B3 · Multi</div>
     </div>
   </div>
   <div style="margin:10px 16px 0;">
     <div class="insight">
-      <strong>Estratégia ·</strong> Alocar 10–15% em ativos internacionais protege contra desvalorização do real. Prioridade: IVVB11 com os R$&nbsp;15.579 disponíveis.
+      <strong>Estratégia ·</strong> Diversificar em múltiplas moedas (USD, EUR, JPY, Yuan) protege contra desvalorização do real. Sugestão: IVVB11 como base (30–40%), depois EURP11 e JPSA11 como diversificação de moeda. ACWI11 cobre tudo em um único produto.
     </div>
   </div>
 
@@ -1649,13 +1667,6 @@ tr:last-child td { border-bottom: none; }
 </div><!-- /shell -->
 
 <script>
-// Captura erros globais e mostra na tela (diagnóstico iOS)
-window.onerror = function(msg, src, line, col, err){
-  var box = document.getElementById('global-error-box');
-  if(!box){ box = document.createElement('div'); box.id='global-error-box'; box.style.cssText='position:fixed;bottom:80px;left:8px;right:8px;background:#f87171;color:#000;font-size:11px;font-family:monospace;padding:8px 10px;border-radius:8px;z-index:9999;word-break:break-all;max-height:120px;overflow:auto'; document.body && document.body.appendChild(box); }
-  box.textContent = (msg||'') + ' ['+line+':'+col+'] ' + (src||'').split('/').pop();
-  return false;
-};
 window.addEventListener('unhandledrejection', function(e){
   var box = document.getElementById('global-error-box');
   if(!box){ box = document.createElement('div'); box.id='global-error-box'; box.style.cssText='position:fixed;bottom:80px;left:8px;right:8px;background:#facc15;color:#000;font-size:11px;font-family:monospace;padding:8px 10px;border-radius:8px;z-index:9999;word-break:break-all;max-height:120px;overflow:auto'; document.body && document.body.appendChild(box); }
@@ -2266,10 +2277,26 @@ var companyData = {
   },
   EURP11: { name:'Trend Europa ETF (EURP11)', sector:'ETF Internacional — Europa', setor:'ETF / Internacional', subsetor:'Mercados Europeus em Reais',tipo:'bdrs',
     desc:'ETF que oferece exposição às maiores empresas europeias (índice MSCI Europe) — incluindo Reino Unido, França, Alemanha, Suíça e países nórdicos. Diversificação em euro e libra esterlina.',
-    pontos:['Único ETF listado na B3 com foco exclusivo em Europa','Valuations mais baratos que EUA — oportunidade de entrada atraente','Exposição ao euro e libra, além do dólar — diversificação de moeda'],
+    pontos:['Único ETF listado na B3 com foco exclusivo em Europa','Valuations mais baratos que EUA — oportunidade de entrada atraente','Exposição ao euro e libra esterlina — diversificação de moeda além do dólar'],
     riscos:['Europa enfrenta crescimento econômico mais lento que EUA e Ásia','Risco geopolítico elevado — conflito na Ucrânia e instabilidade política','Baixa liquidez na B3 — spread compra/venda pode ser alto'],
     acoes:{
-      internacional:'EURP11 é o ETF mais específico e de menor liquidez. <strong>Indicado apenas como diversificação de moeda e geografia para carteiras já maduras.</strong> Alocação pequena (2–5%) é suficiente para diversificar sem concentrar risco. Considere após já ter posição em IVVB11.'
+      internacional:'EURP11 é ideal para diversificar em euro e libra sem depender do dólar. <strong>Alocação de 3–7% complementa bem uma posição já existente em IVVB11.</strong> Considere como segunda camada de diversificação internacional.'
+    }
+  },
+  JPSA11: { name:'Itaú Japan ETF (JPSA11)', sector:'ETF Internacional — Japão', setor:'ETF / Internacional', subsetor:'Mercado Japonês em Reais',tipo:'bdrs',
+    desc:'ETF que replica o índice MSCI Japan — as maiores empresas japonesas incluindo Toyota, Sony, Mitsubishi UFJ, SoftBank e Keyence. Exposição à 3ª maior economia do mundo em iene japonês (JPY).',
+    pontos:['Iene é moeda histórica de proteção (safe haven) em crises globais','Valuations japoneses muito mais baratos que EUA — P/L médio abaixo de 15x','Empresas de qualidade mundial: Toyota, Sony, Nintendo, Fanuc'],
+    riscos:['Risco cambial: iene pode se depreciar frente ao real','Deflação crônica e envelhecimento populacional limitam crescimento','Mercado menos familiar para investidores brasileiros'],
+    acoes:{
+      internacional:'JPSA11 oferece exposição ao iene japonês, moeda que historicamente se valoriza em crises. <strong>É a única forma de acessar o mercado japonês via B3 sem conta no exterior.</strong> Alocação de 3–5% diversifica em uma moeda completamente diferente do dólar e euro. Ideal combinado com IVVB11 e EURP11.'
+    }
+  },
+  HASH11: { name:'Hashdex MSCI Emerging Markets ETF (HASH11)', sector:'ETF Internacional — Emergentes', setor:'ETF / Internacional', subsetor:'Mercados Emergentes em Reais',tipo:'bdrs',
+    desc:'ETF que replica o índice MSCI Emerging Markets — cobrindo as maiores empresas de países como China, Índia, Coreia do Sul, Taiwan, Brasil e outros 20+ mercados emergentes. Exposição a yuan, won coreano, rupia indiana e dólar de Taiwan.',
+    pontos:['China e Índia: duas das economias de maior crescimento do mundo','Valuations emergentes com desconto significativo frente a mercados desenvolvidos','Diversificação em múltiplas moedas e regiões (Ásia, Europa do Leste, América Latina)'],
+    riscos:['Alta volatilidade — mercados emergentes reagem fortemente a crises globais','Risco político e cambial elevados em vários países da cesta','China representa ~30% do índice — risco de concentração geopolítica'],
+    acoes:{
+      internacional:'HASH11 oferece acesso a China, Índia, Coreia do Sul e Taiwan em uma única cota. <strong>Crescimento potencial muito acima de mercados desenvolvidos, mas com mais volatilidade.</strong> Alocação de 3–8% para perfis moderados a arrojados. Combina bem com ACWI11 para uma carteira realmente global.'
     }
   },
 };
