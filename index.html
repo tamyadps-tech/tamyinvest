@@ -1993,14 +1993,7 @@ function go(id){
   document.getElementById('screen-'+id).classList.add('active');
   document.getElementById('nb-'+id).classList.add('active');
   document.querySelector('.main').scrollTop=0;
-  if(id==='robo'){
-    // Se cotações ainda não chegaram (cot-status ainda é padrão), aguarda fetchQuotes
-    const status = document.getElementById('cot-status')?.textContent||'';
-    if(status.includes('Tempo real') || status.includes('Offline')){
-      buildRobo();
-    }
-    // Caso contrário o buildRobo será chamado pelo fetchQuotes quando terminar
-  }
+  if(id==='robo') buildRobo();
 }
 
 function toggleTheme(){
@@ -2447,6 +2440,7 @@ function buildRobo(){
   const el = document.getElementById('robo-content');
   if(!el) return;
 
+  try {
   const analises = portfolio.map(a=>{
     const pct = (a.cot - a.pm) / a.pm * 100;
     const rs  = (a.cot - a.pm) * a.qtd;
@@ -2719,6 +2713,13 @@ function buildRobo(){
     </div>
   </div>`;
 
+  if(!html.trim()){
+    html = `<div style="text-align:center;padding:40px 16px;color:var(--fg3);font-size:13px">Nenhuma tendência identificada no momento.</div>`;
+  }
   el.innerHTML = html;
+  } catch(err) {
+    el.innerHTML = `<div style="text-align:center;padding:40px 16px;color:var(--red);font-size:13px">Erro ao analisar carteira: ${err.message}</div>`;
+    console.error('buildRobo error:', err);
+  }
 }
 </script>
