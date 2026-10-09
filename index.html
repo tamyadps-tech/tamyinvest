@@ -1817,12 +1817,75 @@ function updateTotals(){
 }
 
 // Nubank — valores direto dos prints (não somar B3 separado, já está incluso)
-const NUBANK_CONTA      = 4208.45;   // saldo disponível conta corrente
+const NUBANK_CONTA      = 4208.45;   // saldo disponível conta corrente (base — antes das vendas abaixo)
 const NUBANK_CARTEIRA   = 57623.80;  // Minha Carteira (Bolsa+RF+Fundos+Tesouro)
 const NUBANK_CAIXINHAS  = 80352.04;  // todas as caixinhas (Reserva, Carro, Turbo, etc.)
-const NUBANK_TOTAL      = NUBANK_CONTA + NUBANK_CARTEIRA + NUBANK_CAIXINHAS; // R$142.184,29
 const FUNDOS_XP         = 3791.36;   // 4 fundos XP
 const FUNDO_EXTERNO     = 35000;     // rende R$1.400/mês (renda passiva mensal)
+
+// ── Histórico de vendas — liquidação D+2 úteis ──────────────────────
+// Cada venda: { ticker, qtd, preco, data:'YYYY-MM-DD', obs }
+// O sistema calcula automaticamente a data de liquidação (D+2 úteis)
+// e soma o valor à conta corrente quando o prazo já passou.
+const VENDAS_REALIZADAS = [
+  { ticker:'PLPL3', qtd:300, preco:8.39,  data:'2026-10-07', obs:'Venda total — 300 cotas' },
+  { ticker:'SMFT3', qtd:45,  preco:21.28, data:'2026-10-07', obs:'Venda total — 45 cotas'  },
+];
+
+// Feriados nacionais (YYYY-MM-DD) — adicione conforme necessário
+const FERIADOS_B3 = [
+  '2026-11-02','2026-11-15','2026-11-20',
+  '2026-12-25','2027-01-01','2027-02-15','2027-02-16',
+  '2027-04-02','2027-04-21','2027-05-01','2027-06-03',
+  '2027-09-07','2027-10-12','2027-11-02','2027-11-15',
+  '2027-11-20','2027-12-25',
+];
+
+function ehDiaUtil(d){
+  // d = objeto Date (sem hora)
+  const diaSemana = d.getDay(); // 0=dom, 6=sab
+  if(diaSemana === 0 || diaSemana === 6) return false;
+  const iso = d.toISOString().slice(0,10);
+  return !FERIADOS_B3.includes(iso);
+}
+
+function adicionarDiasUteis(dataStr, dias){
+  // Retorna a data de liquidação (YYYY-MM-DD) após N dias úteis
+  let d = new Date(dataStr + 'T12:00:00'); // meio-dia para evitar problemas de fuso
+  let count = 0;
+  while(count < dias){
+    d.setDate(d.getDate() + 1);
+    if(ehDiaUtil(d)) count++;
+  }
+  return d.toISOString().slice(0,10);
+}
+
+function calcularLiquidacaoVendas(){
+  // Retorna { liquidado, pendente, detalhes }
+  // liquidado = já caiu na conta (D+2 passou)
+  // pendente  = ainda não caiu
+  const hoje = new Date().toISOString().slice(0,10);
+  let liquidado = 0;
+  let pendente  = 0;
+  const detalhes = [];
+
+  VENDAS_REALIZADAS.forEach(v => {
+    const valor    = v.qtd * v.preco;
+    const dataLiq  = adicionarDiasUteis(v.data, 2);
+    const jaCaiu   = dataLiq <= hoje;
+    if(jaCaiu) liquidado += valor;
+    else        pendente  += valor;
+    detalhes.push({ ...v, valor, dataLiq, jaCaiu });
+  });
+
+  return { liquidado, pendente, detalhes };
+}
+
+// Total Nubank = base + vendas já liquidadas (D+2 passou)
+function calcularNubankTotal(){
+  const { liquidado } = calcularLiquidacaoVendas();
+  return NUBANK_CONTA + NUBANK_CARTEIRA + NUBANK_CAIXINHAS + liquidado;
+}
 
 // Composição interna da carteira Nubank (para exibição nas pills)
 const NU_BOLSA    = 40357.76;  // Bolsa de valores
@@ -1833,9 +1896,9 @@ const NU_TESOURO  = 4738.47;   // Tesouro direto
 function updatePatrimonio(){
   const totalB3 = portfolio.filter(a=>a.tipo!=='rf').reduce((s,a)=>s+a.cot*a.qtd,0);
   const totalRF = portfolio.filter(a=>a.tipo==='rf').reduce((s,a)=>s+a.pm*a.qtd,0);
-  // NUBANK_TOTAL já inclui bolsa, RF, fundos, tesouro e caixinhas — não somar B3 de novo
+  // calcularNubankTotal() = NUBANK_CONTA + NUBANK_CARTEIRA + NUBANK_CAIXINHAS + vendas já liquidadas (D+2)
   // A carteira B3 ao vivo serve para exibir a pill e o desempenho, não para somar ao total
-  const total   = NUBANK_TOTAL + FUNDOS_XP + FUNDO_EXTERNO;
+  const total   = calcularNubankTotal() + FUNDOS_XP + FUNDO_EXTERNO;
   const fmtK = v => v>=1000?'R$ '+(v/1).toLocaleString('pt-BR',{maximumFractionDigits:0}):fmt(v);
   const b3El = document.getElementById('pill-b3');
   const patEl = document.getElementById('pat-val');
