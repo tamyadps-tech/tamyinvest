@@ -1353,12 +1353,49 @@ tr:last-child td { border-bottom: none; }
         <div class="alert-sub">Buscando dados em tempo real...</div>
       </div>
     </div>
-    <div class="alert-item a-gold" onclick="openModal('BBAS3','monitorar')">
+    <!-- ALERTA RECUPERAÇÃO +2% — VALE3 -->
+    <div id="vale3-rec-card" class="alert-item a-blue" onclick="openModal('VALE3','monitorar-venda')" style="cursor:pointer;">
       <div class="alert-bar"></div>
       <div class="alert-body">
-        <div class="alert-tag">Monitorar</div>
-        <div class="alert-title">BBAS3 · Comprado no rally</div>
-        <div class="alert-sub">Entrada no pico do +8,85%. Toque para ver análise completa.</div>
+        <div class="alert-tag">VALE3 · aguardando recuperação</div>
+        <div class="alert-title">Meta: +2% sobre PM R$73,84 → R$75,32</div>
+        <div class="alert-sub">Buscando cotação em tempo real...</div>
+      </div>
+    </div>
+    <!-- ALERTA RECUPERAÇÃO +2% — TTEN3 -->
+    <div id="tten3-rec-card" class="alert-item a-blue" onclick="openModal('TTEN3','aguardar')" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">TTEN3 · aguardando recuperação</div>
+        <div class="alert-title">Meta: +2% sobre PM R$14,39 → R$14,68</div>
+        <div class="alert-sub">Buscando cotação em tempo real...</div>
+      </div>
+    </div>
+    <!-- ALERTA RECUPERAÇÃO +2% — TRXF11 -->
+    <div id="trxf11-rec-card" class="alert-item a-blue" onclick="openModal('TRXF11','aguardar')" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">TRXF11 · aguardando recuperação</div>
+        <div class="alert-title">Meta: +2% sobre PM R$91,90 → R$93,74</div>
+        <div class="alert-sub">Buscando cotação em tempo real...</div>
+      </div>
+    </div>
+    <!-- ALERTA RECUPERAÇÃO +2% — EGIE3 -->
+    <div id="egie3-rec-card" class="alert-item a-blue" onclick="openModal('EGIE3','manter')" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">EGIE3 · aguardando recuperação</div>
+        <div class="alert-title">Meta: +2% sobre PM R$32,78 → R$33,44</div>
+        <div class="alert-sub">Buscando cotação em tempo real...</div>
+      </div>
+    </div>
+    <!-- ALERTA RECUPERAÇÃO +2% — BBAS3 -->
+    <div id="bbas3-rec-card" class="alert-item a-blue" onclick="openModal('BBAS3','monitorar-venda')" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">BBAS3 · aguardando recuperação</div>
+        <div class="alert-title">Meta: +2% sobre PM R$26,67 → R$27,20</div>
+        <div class="alert-sub">Buscando cotação em tempo real...</div>
       </div>
     </div>
   </div>
@@ -1964,8 +2001,60 @@ async function fetchQuotes(){
   fetchGARE11History();
   fetchIRIM11History();
   fetchPRIO3History();
+  // Alertas de recuperação +2% sobre PM
+  verificarRecuperacao('VALE3',  73.84, 65, 'vale3-rec-card',  'monitorar-venda');
+  verificarRecuperacao('TTEN3',  14.39, 80, 'tten3-rec-card',  'aguardar');
+  verificarRecuperacao('TRXF11', 91.90, 15, 'trxf11-rec-card', 'aguardar');
+  verificarRecuperacao('EGIE3',  32.78, 30, 'egie3-rec-card',  'manter');
+  verificarRecuperacao('BBAS3',  26.67,100, 'bbas3-rec-card',  'monitorar-venda');
   var roboEl = document.getElementById('screen-robo');
   if(roboEl && roboEl.classList.contains('active')) buildRobo();
+}
+
+// ── Alerta instantâneo de recuperação +2% sobre PM ──────────────────
+async function verificarRecuperacao(ticker, pm, qtd, cardId){
+  const card = document.getElementById(cardId);
+  if(!card) return;
+  const item = portfolio.find(a=>a.ticker===ticker);
+  const cotBase = item ? item.cot : null;
+  try{
+    const r = await fetch('https://brapi.dev/api/quote/'+ticker+'?token='+BRAPI_TOKEN);
+    if(r.ok){
+      const d = await r.json();
+      const res = (d.results||[])[0];
+      _atualizarCardRec(card, ticker, pm, qtd, (res && res.regularMarketPrice) ? res.regularMarketPrice : cotBase);
+    } else { _atualizarCardRec(card, ticker, pm, qtd, cotBase); }
+  }catch(e){ _atualizarCardRec(card, ticker, pm, qtd, cotBase); }
+}
+
+function _atualizarCardRec(card, ticker, pm, qtd, cot){
+  const meta = pm * 1.02;
+  const pctAtual    = cot ? ((cot - pm) / pm * 100) : null;
+  const faltaReais  = cot ? (meta - cot) : null;
+  const faltaPct    = cot ? ((meta - cot) / cot * 100) : null;
+  const atingiu     = cot && cot >= meta;
+  const resultAtual = cot ? ((cot - pm) * qtd) : null;
+  const fmt2   = v => v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmtPct = v => (v>=0?'+':'') + v.toFixed(2)+'%';
+  var classe, tagTxt, titulo, sub;
+  if(atingiu){
+    classe = 'a-green';
+    tagTxt = '🎯 '+ticker+' · META +2% ATINGIDA!';
+    titulo = ticker+' · R$'+fmt2(cot)+' — acima dos +2% sobre PM!';
+    sub    = 'PM R$'+fmt2(pm)+' · Meta R$'+fmt2(meta)+' · Resultado: '+(resultAtual>=0?'+':'−')+'R$'+fmt2(Math.abs(resultAtual))+' nas '+qtd+' cotas';
+    dispararNotificacaoPush('🎯 '+ticker+' recuperou +2%!','Cotação R$'+fmt2(cot)+' · Meta R$'+fmt2(meta)+' atingida!');
+  } else if(cot){
+    classe = 'a-blue';
+    tagTxt = ticker+' · monitorando recuperação +2%';
+    titulo = ticker+' · R$'+fmt2(cot)+' ('+fmtPct(pctAtual)+' vs PM)';
+    sub    = 'Meta: R$'+fmt2(meta)+' · falta R$'+fmt2(Math.abs(faltaReais))+' ('+Math.abs(faltaPct).toFixed(1)+'%) · Resultado atual: '+(resultAtual>=0?'+':'−')+'R$'+fmt2(Math.abs(resultAtual));
+  } else {
+    classe = 'a-blue';
+    tagTxt = ticker+' · aguardando cotação';
+    titulo = 'Meta: +2% sobre PM R$'+fmt2(pm)+' → R$'+fmt2(meta);
+    sub    = 'Buscando cotação em tempo real...';
+  }
+  _setCardData(card, classe, tagTxt, titulo, sub);
 }
 
 async function fetchB3SA3History(){
