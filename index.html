@@ -1400,6 +1400,26 @@ tr:last-child td { border-bottom: none; }
     </div>
   </div>
 
+  <div class="sec-lbl">Compra no Piso — BDRs Globais</div>
+  <div class="alert-list">
+    <div id="tsmc34-piso-card" class="alert-item a-blue" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">TSMC34 · monitorando piso 6 meses</div>
+        <div class="alert-title">Aguardando menor preço dos últimos 6 meses</div>
+        <div class="alert-sub">Buscando histórico...</div>
+      </div>
+    </div>
+    <div id="msft34-piso-card" class="alert-item a-blue" style="cursor:pointer;">
+      <div class="alert-bar"></div>
+      <div class="alert-body">
+        <div class="alert-tag">MSFT34 · monitorando piso 6 meses</div>
+        <div class="alert-title">Aguardando menor preço dos últimos 6 meses</div>
+        <div class="alert-sub">Buscando histórico...</div>
+      </div>
+    </div>
+  </div>
+
   <div class="sec-lbl">Oportunidades</div>
   <div class="alert-list">
     <div class="alert-item a-blue" onclick="openModal('B3SA3','lucro')">
@@ -2007,6 +2027,9 @@ async function fetchQuotes(){
   verificarRecuperacao('TRXF11', 91.90, 15, 'trxf11-rec-card', 'aguardar');
   verificarRecuperacao('EGIE3',  32.78, 30, 'egie3-rec-card',  'manter');
   verificarRecuperacao('BBAS3',  26.67,100, 'bbas3-rec-card',  'monitorar-venda');
+  // Alertas de piso 6 meses — BDRs globais
+  verificarPiso6Meses('TSMC34', 'tsmc34-piso-card');
+  verificarPiso6Meses('MSFT34', 'msft34-piso-card');
   var roboEl = document.getElementById('screen-robo');
   if(roboEl && roboEl.classList.contains('active')) buildRobo();
 }
@@ -2055,6 +2078,48 @@ function _atualizarCardRec(card, ticker, pm, qtd, cot){
     sub    = 'Buscando cotação em tempo real...';
   }
   _setCardData(card, classe, tagTxt, titulo, sub);
+}
+
+async function verificarPiso6Meses(ticker, cardId){
+  const card = document.getElementById(cardId);
+  if(!card) return;
+  const fmt2 = v => v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  try{
+    // brapi: 6 meses de histórico diário
+    const url = 'https://brapi.dev/api/quote/'+ticker+'?range=6mo&interval=1d&token='+BRAPI_TOKEN;
+    const r = await fetch(url);
+    if(!r.ok) throw new Error('http '+r.status);
+    const d = await r.json();
+    const res = (d.results||[])[0];
+    const hist = res && res.historicalDataPrice ? res.historicalDataPrice : [];
+    const cotAtual = res && res.regularMarketPrice ? res.regularMarketPrice : null;
+    if(!cotAtual){ throw new Error('sem cotação'); }
+    const precos = hist.map(h=>h.close).filter(v=>v && v>0);
+    const piso = precos.length > 0 ? Math.min(...precos) : null;
+    const noMinimo = piso !== null && cotAtual <= piso * 1.01; // margem 1%
+    if(noMinimo){
+      _setCardData(card,'a-green',
+        '🟢 '+ticker+' · PISO 6 MESES — COMPRAR!',
+        ticker+' · R$'+fmt2(cotAtual)+' — menor nível em 6 meses!',
+        'Piso 6m: R$'+fmt2(piso)+' · Cotação atual: R$'+fmt2(cotAtual)+' · Oportunidade de entrada!'
+      );
+      dispararNotificacaoPush('🟢 '+ticker+' no piso!','R$'+fmt2(cotAtual)+' — menor preço dos últimos 6 meses!');
+    } else if(piso !== null){
+      const distPct = ((cotAtual - piso)/piso*100);
+      _setCardData(card,'a-blue',
+        ticker+' · '+distPct.toFixed(1)+'% acima do piso 6m',
+        ticker+' · R$'+fmt2(cotAtual)+' · Piso 6m: R$'+fmt2(piso),
+        'Cotação atual '+(distPct>0?'+':'')+distPct.toFixed(1)+'% acima do mínimo dos últimos 6 meses. Alerta quando atingir o piso.'
+      );
+    } else {
+      _setCardData(card,'a-blue',ticker+' · monitorando piso 6 meses',
+        'Aguardando histórico suficiente','Buscando dados...');
+    }
+  }catch(e){
+    _setCardData(card,'a-blue',ticker+' · monitorando piso 6 meses',
+      'Alerta configurado — aguardando cotação ao vivo',
+      'Notificação automática quando '+ticker+' atingir o menor preço dos últimos 6 meses.');
+  }
 }
 
 async function fetchB3SA3History(){
